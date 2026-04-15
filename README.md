@@ -32,8 +32,9 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 | `fish` | Fish shell config, custom functions (`co`, `oe`, `osh`, `ide`), completions |
 | `ghostty` | Ghostty terminal (Catppuccin Mocha, JetBrains Mono, transparency) |
 | `git` | Git config and global gitignore (Odoo workflow aliases, split-diffs pager) |
-| `hypr` | Hyprland WM overrides (keybindings, input, lock screen) |
-| `nvim` | NeoVim with LazyVim (LSP, DAP Python, Claude Code, Diffview) |
+| `hypr` | Hyprland WM overrides (keybindings, input, lock screen, mic mute fix) |
+| `local-bin` | Custom scripts shadowing Omarchy defaults (monitor scaling cycle) |
+| `nvim` | NeoVim with LazyVim (LSP, DAP Python, Claude Code, Diffview, git permalink) |
 | `starship` | Starship prompt with Catppuccin Mocha palette |
 | `tmux` | Tmux config (C-s prefix, vim-tmux-navigator, Catppuccin) |
 | `tmuxinator` | Tmuxinator layout for Odoo development |
@@ -57,7 +58,7 @@ git clone <repo-url> ~/src/dev-config
 cd ~/src/dev-config/dotfiles
 
 # Stow all packages
-stow -v --target=$HOME atuin catppuccin discord fish ghostty git hypr nvim starship tmux tmuxinator yazi
+stow -v --target=$HOME atuin catppuccin discord fish ghostty git hypr local-bin nvim starship tmux tmuxinator yazi
 
 # Or stow individually
 stow -v --target=$HOME nvim
@@ -120,9 +121,15 @@ Odoo containers are created dynamically by the `oe` fish function, not by docker
 
 This repo tracks **personal overrides** on top of [Omarchy](https://github.com/basecamp/omarchy)'s default configs. The `hypr` stow package contains only files with custom modifications:
 
-- `bindings.conf` — Custom keybindings (tmux, opencode, mic LED sync)
+- `bindings.conf` — Custom keybindings (tmux, opencode, mic mute fix with LED sync)
 - `input.conf` — US altgr-intl keyboard, natural scroll, custom repeat rate
 - `hyprlock.conf` — Fingerprint unlock, custom placeholder
+
+### Custom scripts (`local-bin`)
+
+Scripts in `~/.local/bin` that shadow Omarchy defaults (higher PATH priority):
+
+- `omarchy-hyprland-monitor-scaling-cycle` — Finer scaling increments: 1 → 1.2 → 1.4 → 1.6 → 1.8 → 2 → 1 (Omarchy default: 1 → 1.6 → 2 → 3 → 1)
 
 Files identical to Omarchy defaults (autostart, hypridle, hyprsunset, xdph) are **not tracked** — Omarchy manages them. `monitors.conf` is machine-specific and must be created manually per device.
 

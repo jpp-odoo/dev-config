@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Get the active monitor (the one with the cursor)
+MONITOR_INFO=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true)')
+ACTIVE_MONITOR=$(echo "$MONITOR_INFO" | jq -r '.name')
+CURRENT_SCALE=$(echo "$MONITOR_INFO" | jq -r '.scale')
+WIDTH=$(echo "$MONITOR_INFO" | jq -r '.width')
+HEIGHT=$(echo "$MONITOR_INFO" | jq -r '.height')
+REFRESH_RATE=$(echo "$MONITOR_INFO" | jq -r '.refreshRate')
+
+# Cycle through scales: 1 → 1.25 → 1.33 → 1.60 → 1.67 → 2 → 1
+# Note: Hyprland snaps to compatible fractional values based on monitor resolution.
+# These are the actual values reported (not necessarily what you request).
+CURRENT_INT=$(awk -v s="$CURRENT_SCALE" 'BEGIN { printf "%.0f", s * 100 }')
+
+case "$CURRENT_INT" in
+100) NEW_SCALE=1.25 ;;
+125) NEW_SCALE=1.333333 ;;
+133) NEW_SCALE=1.6 ;;
+160) NEW_SCALE=1.75 ;;
+167) NEW_SCALE=2 ;;
+*) NEW_SCALE=1 ;;
+esac
+
+hyprctl keyword misc:disable_scale_notification true
+hyprctl keyword monitor "$ACTIVE_MONITOR,${WIDTH}x${HEIGHT}@${REFRESH_RATE},auto,$NEW_SCALE"
+hyprctl keyword misc:disable_scale_notification false
+
+# Show the actual applied scale (Hyprland may adjust the value)
+ACTUAL=$(hyprctl monitors -j | jq -r ".[] | select(.name == \"$ACTIVE_MONITOR\") | .scale")
+notify-send -u low "󰍹    Display scaling set to ${ACTUAL}x"

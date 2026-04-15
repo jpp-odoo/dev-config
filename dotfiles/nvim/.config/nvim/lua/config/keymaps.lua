@@ -32,3 +32,7 @@ vim.keymap.set("o", "P", function()
     vim.notify("Yanked: " .. path)
     return "<Esc>"
 end, { expr = true, desc = "Yank absolute file path" })
+
+vim.keymap.set({ "n", "x" }, "<leader>gY", function()
+    require("utils").copy_git_permalink()
+end, { desc = "Copy Git Permalink" })
