@@ -1,0 +1,14 @@
+# yazi.toml
+[mgr]
+# It seems that it doesn't work O.o
+show_hidden = true
+
+[[plugin.prepend_fetchers]]
+id   = "git"
+name = "*"
+run  = "git"
+
+[[plugin.prepend_fetchers]]
+id   = "git"
+name = "*/"
+run  = "git"

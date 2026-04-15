@@ -1,0 +1,15 @@
+# ~/.config/tmuxinator/odoo.yml
+
+name: <%= File.basename(ENV["PWD"]).gsub('.', '_') %>
+root: .
+
+windows:
+  - editor:
+      panes:
+        - nvim
+  - git: 
+      layout: even-vertical
+      panes:
+        - cd odoo
+        - cd enterprise
+  - server:

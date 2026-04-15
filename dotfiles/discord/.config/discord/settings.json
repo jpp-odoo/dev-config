@@ -1,0 +1,12 @@
+{
+  "SKIP_HOST_UPDATE": true,
+  "offloadAdmControls": true,
+  "BACKGROUND_COLOR": "#2c2d32",
+  "enableHardwareAcceleration": true,
+  "chromiumSwitches": {},
+  "asyncVideoInputDeviceInit": false,
+  "IS_MAXIMIZED": true,
+  "IS_MINIMIZED": false,
+  "enableLibOpenH264Electron": false,
+  "openH264Enabled": true
+}

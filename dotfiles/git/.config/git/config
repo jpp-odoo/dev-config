@@ -1,0 +1,38 @@
+[user]
+	name = Jorge Pinna Puissant
+	email = jpp@odoo.com
+	signingkey = 5CB4AAD7B4941B89
+
+[alias]
+	co = checkout
+	fa = fetch --all --prune
+	r = !fish -c 'set base (git rev-parse --abbrev-ref HEAD | string match -r \"(?:saas-)?[^-]*\") && echo rebase origin/$base && git rebase --autostash origin/$base'
+	br = branch -vv
+	p = !CURRENT=$(git rev-parse --abbrev-ref HEAD) && git push --set-upstream dev $CURRENT
+	pf = !CURRENT=$(git rev-parse --abbrev-ref HEAD) && git push --set-upstream --force-with-lease dev $CURRENT
+	enforce = push --force-with-lease
+	fuck = reset --hard HEAD
+	superfuck = reset --hard @{u}
+	wip = !fish -c 'git commit -am \"[WIP] \"(curl -s https://whatthecommit.com/index.txt) | sed \"s/.*/\\\"&\\\"/\"'
+	cp = cherry-pick
+    undo = reset HEAD^
+
+[core]
+	excludesfile = ~/.config/git/gitglobalignore
+	editor = nvim
+	pager = git-split-diffs --color | less -+LFX
+
+[fetch]
+    prune = true
+
+[pull]
+    rebase = true
+
+[status]
+	showuntrackedfiles = all
+
+[push]
+	autoSetupRemote = true
+
+[split-diffs]
+	theme-name = github-dark-dim

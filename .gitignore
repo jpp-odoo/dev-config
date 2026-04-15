@@ -1,0 +1,24 @@
+# Secrets / local env
+*.env
+.env.*
+local.fish
+
+# Editor swap/backup
+*.swp
+*.swo
+*~
+*.bak
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Claude Code local settings
+.claude/
+
+# Atuin install receipt (contains stale macOS paths)
+dotfiles/atuin/.config/atuin/atuin-receipt.json
+
+# Yazi plugins/flavors (installed via `ya pkg install`)
+dotfiles/yazi/.config/yazi/flavors/
+dotfiles/yazi/.config/yazi/plugins/
