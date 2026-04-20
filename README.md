@@ -37,6 +37,7 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 | `starship` | Starship prompt with Catppuccin Mocha palette |
 | `tmux` | Tmux config (C-s prefix, vim-tmux-navigator, Catppuccin) |
 | `tmuxinator` | Tmuxinator layout for Odoo development |
+| `waybar` | Waybar status bar (omarchy overrides) |
 | `yazi` | Yazi file manager with Catppuccin Mocha flavor and git plugin |
 
 ## Prerequisites
@@ -57,7 +58,7 @@ git clone <repo-url> ~/src/dev-config
 cd ~/src/dev-config/dotfiles
 
 # Stow all packages
-stow -v --target=$HOME atuin catppuccin discord fish ghostty git hypr local-bin nvim starship tmux tmuxinator yazi
+stow -v --target=$HOME atuin catppuccin discord fish ghostty git hypr nvim starship tmux tmuxinator waybar yazi
 
 # Or stow individually
 stow -v --target=$HOME nvim
