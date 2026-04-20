@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Toggle klog clock-in/out. Auto-creates today's record with a 7h36m
+# should-total on weekdays (Mon–Fri). Pokes waybar via SIGRTMIN+11.
+set -u
+
+TODAY=$(date +%Y-%m-%d)
+DOW=$(date +%u)
+SHOULD=""
+[ "$DOW" -le 5 ] && SHOULD="7h36m"
+
+has_today=$(klog json 2>/dev/null | jq --arg d "$TODAY" '[.records[] | select(.date == $d)] | length')
+if [ "${has_today:-0}" -eq 0 ]; then
+    if [ -n "$SHOULD" ]; then
+        klog create --today --should "$SHOULD" >/dev/null
+    else
+        klog create --today >/dev/null
+    fi
+fi
+
+has_open=$(klog json 2>/dev/null | jq --arg d "$TODAY" '[.records[] | select(.date == $d) | .entries[] | select(.type == "open_range")] | length')
+
+if [ "${has_open:-0}" -gt 0 ]; then
+    klog stop >/dev/null && action="stopped"
+else
+    klog start >/dev/null && action="started"
+fi
+
+notify-send -t 2000 "klog" "Clock ${action:-toggled}" 2>/dev/null || true
+pkill -RTMIN+11 waybar 2>/dev/null || true

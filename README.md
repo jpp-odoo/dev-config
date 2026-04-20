@@ -33,10 +33,12 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 | `ghostty` | Ghostty terminal (Catppuccin Mocha, JetBrains Mono, transparency) |
 | `git` | Git config and global gitignore (Odoo workflow aliases, split-diffs pager) |
 | `hypr` | Hyprland WM overrides (keybindings, input, lock screen, mic mute fix) |
+| `klog` | [klog](https://klog.jotaen.net) time-tracking helper scripts (waybar clock-in/out, 7h36/day) |
 | `nvim` | NeoVim with LazyVim (LSP, DAP Python, Claude Code, Diffview, git permalink) |
 | `starship` | Starship prompt with Catppuccin Mocha palette |
 | `tmux` | Tmux config (C-s prefix, vim-tmux-navigator, Catppuccin) |
 | `tmuxinator` | Tmuxinator layout for Odoo development |
+| `waybar` | Waybar status bar (omarchy overrides, klog time-tracking module) |
 | `yazi` | Yazi file manager with Catppuccin Mocha flavor and git plugin |
 
 ## Prerequisites
@@ -57,7 +59,7 @@ git clone <repo-url> ~/src/dev-config
 cd ~/src/dev-config/dotfiles
 
 # Stow all packages
-stow -v --target=$HOME atuin catppuccin discord fish ghostty git hypr local-bin nvim starship tmux tmuxinator yazi
+stow -v --target=$HOME atuin catppuccin discord fish ghostty git hypr klog nvim starship tmux tmuxinator waybar yazi
 
 # Or stow individually
 stow -v --target=$HOME nvim
@@ -115,6 +117,16 @@ Odoo containers are created dynamically by the `oe` fish function, not by docker
 
 - `fix_ssh_passphrase.sh` — Store SSH key passphrase in GNOME Keyring for auto-unlock
 - `setup_mute_fix.sh` — Sync ThinkPad mic mute LED with actual mute state (Hyprland)
+
+## Time Tracking (klog)
+
+Work hours are tracked with [klog](https://klog.jotaen.net) (`yay -S klog-time-tracker-bin`) and surfaced in waybar:
+
+- **Log file**: `~/klog/work.klg` (plain text, `klog bookmarks set ~/klog/work.klg default`)
+- **Target**: 7h36/day on weekdays — auto-applied on first clock-in of the day via `--should 7h36m`
+- **Clicking the waybar module**: left-click toggles start/stop, right-click opens the log in NeoVim
+- **Display**: just the current day's tracked time; tooltip shows `Today: X:XX / 7:36 (diff ±H:MM)` and rolling `Bank: ±H:MM` across all records
+- **Scripts**: `~/.config/klog/klog-toggle` (clock in/out, signals waybar via `SIGRTMIN+11`) and `~/.config/klog/klog-waybar` (JSON output)
 
 ## Omarchy Notes
 

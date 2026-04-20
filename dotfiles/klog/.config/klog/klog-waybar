@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# Waybar module output for klog. Prints JSON with today's worked/should,
+# the overall bank, and a class that reflects running state.
+set -u
+
+TODAY=$(date +%Y-%m-%d)
+NOW_MINS=$(( 10#$(date +%H) * 60 + 10#$(date +%M) ))
+
+json=$(klog json 2>/dev/null)
+if [ -z "$json" ] || ! printf '%s' "$json" | jq -e . >/dev/null 2>&1; then
+    printf '{"text":"--:--","tooltip":"klog: no data","class":"inactive"}\n'
+    exit 0
+fi
+
+fmt() {
+    local m=${1:-0} sign=""
+    if [ "$m" -lt 0 ]; then sign="-"; m=$(( -m )); fi
+    printf '%s%d:%02d' "$sign" $(( m / 60 )) $(( m % 60 ))
+}
+
+read -r worked should has_open < <(
+    printf '%s' "$json" | jq -r --arg d "$TODAY" --argjson now "$NOW_MINS" '
+        (.records[] | select(.date == $d)) as $r
+        | (($r.entries // []) | map(if .type == "open_range" then ($now - .start_mins) else .total_mins end) | add // 0) as $w
+        | "\($w) \($r.should_total_mins // 0) \((($r.entries // []) | any(.type == "open_range")))"
+    '
+)
+worked=${worked:-0}
+should=${should:-0}
+has_open=${has_open:-false}
+
+bank=$(printf '%s' "$json" | jq --argjson now "$NOW_MINS" '
+    [.records[]
+        | ((.entries // []) | map(if .type == "open_range" then ($now - .start_mins) else .total_mins end) | add // 0) as $w
+        | $w - (.should_total_mins // 0)
+    ] | add // 0
+')
+
+diff=$(( worked - should ))
+class=$([ "$has_open" = "true" ] && echo "running" || echo "inactive")
+
+fmt_signed() {
+    local m=${1:-0}
+    if [ "$m" -gt 0 ]; then printf '+%s' "$(fmt "$m")"
+    elif [ "$m" -lt 0 ]; then fmt "$m"
+    else printf '±0:00'
+    fi
+}
+
+text="$(fmt "$worked")"
+
+tooltip=$(printf 'Today: %s / %s (diff %s)\nBank: %s' \
+    "$(fmt "$worked")" "$(fmt "$should")" "$(fmt_signed "$diff")" "$(fmt_signed "$bank")")
+
+jq -nc --arg t "$text" --arg tt "$tooltip" --arg c "$class" \
+    '{text:$t, tooltip:$tt, class:$c}'
