@@ -1,4 +1,5 @@
-FROM localhost/bookworm
+ARG BASE_IMAGE=noble
+FROM ${BASE_IMAGE}
 
 USER root
 
