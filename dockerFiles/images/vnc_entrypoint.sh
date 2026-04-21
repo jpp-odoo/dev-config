@@ -1,21 +1,5 @@
 #!/bin/bash
 
-# #Based on: https://github.com/jupemara/x11vnc-d
-# set -e
-#
-# export DISPLAY=:99
-#
-# Xvfb :99 -ac -listen tcp -screen 0 1280x1024x24 &
-# sleep 3
-# /usr/bin/fluxbox -display :99 -screen 0 &
-# sleep 3
-# x11vnc -display :99.0 -forever -passwd odoo &
-# sleep 5
-#
-# ls -la
-#
-# exec "$@"
-
 set -e
 
 # --- 1. Set Standard Display (Port 5900) ---

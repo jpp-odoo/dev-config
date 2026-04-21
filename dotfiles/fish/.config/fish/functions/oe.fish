@@ -57,8 +57,8 @@ function oe --description "Odoo Server"
         case "16.0" "17.0"
             # 16.0, 17.0 -> ubuntu:jammy
             set ubuntuVersion jammy
-        case "18.0" "saas-18*" "19.0" "saas-19.1" master
-            # 18.0, saas-18.2, saas-18.3, saas-18.4, 19.0, saas-19.1, master -> ubuntu:noble
+        case "18.0" "saas-18*" "19.0" "saas-19*" master
+            # 18.0, saas-18.*, 19.0, saas-19.*, master -> ubuntu:noble
             set ubuntuVersion noble
         case "*"
             set ubuntuVersion noble
@@ -93,12 +93,17 @@ function oe --description "Odoo Server"
     end
 
     # --- Image Check ---
-    # IF Image name has vnc .. need to build both !!! 
-    if not docker image inspect $imageName >/dev/null 2>&1
+    if not docker image inspect $ubuntuVersion >/dev/null 2>&1
+        echo "Building missing image: $ubuntuVersion"
+        set -l buildBase docker build -f "~/src/dev-config/dockerFiles/images/$ubuntuVersion.dockerfile" -t $ubuntuVersion ~/src/dev-config/dockerFiles/images/
+        echo "running : $buildBase"
+        eval $buildBase
+    end
+    if set --query _flag_tour; and not docker image inspect $imageName >/dev/null 2>&1
         echo "Building missing image: $imageName"
-        set -l runBuildImage docker build -f "~/src/dev-config/dockerFiles/images/$imageName.dockerfile" -t $imageName ~/src/dev-config/dockerFiles/images/
-        echo "running : $runBuildImage"
-        eval $runBuildImage
+        set -l buildVnc docker build -f "~/src/dev-config/dockerFiles/images/vnc.dockerfile" --build-arg "BASE_IMAGE=$ubuntuVersion" -t $imageName ~/src/dev-config/dockerFiles/images/
+        echo "running : $buildVnc"
+        eval $buildVnc
     end
 
     # Port 5900 is for vnc ... maybe put it in odoo or odoo2 and change it
@@ -164,13 +169,6 @@ function oe --description "Odoo Server"
     if set --query _flag_i
         set -a odoo "-i $_flag_i"
     end
-
-    #FIXME: This makes master enterprise to break ... maybe the docker wasn't good :(
-    #if set --query _flag_xml
-    #    set -a odoo "--dev=\"xml\""
-    #else
-    #    set -a odoo "--dev=\"all\""
-    #end
 
     if set --query _flag_u
         if set --query _flag_drop
