@@ -8,5 +8,6 @@
   "IS_MAXIMIZED": true,
   "IS_MINIMIZED": false,
   "enableLibOpenH264Electron": false,
-  "openH264Enabled": true
+  "openH264Enabled": true,
+  "DESKTOP_TTI_REMOVE_V8_CACHE_CLEAR": true
 }
