@@ -117,11 +117,14 @@ function M.git_blame_commit()
     local remotes = get_remotes(root)
     local links = {}
     for _, r in ipairs(remotes) do
-        local base = remote_to_https(r.url)
-        table.insert(links, r.name .. ": " .. base .. "/commit/" .. hash)
+        if r.name == "origin" then
+            local base = remote_to_https(r.url)
+            table.insert(links, r.name .. ": " .. base .. "/commit/" .. hash)
+        end
     end
     if #links > 0 then
-        Snacks.notify(table.concat(links, "\n"), { title = "Blame Commit", timeout = 0 })
+        vim.fn.setreg("+", links[1]:match(": (.+)") or links[1])
+        Snacks.notify(table.concat(links, "\n"), { title = "Blame Commit", timeout = 8000 })
     end
 end
 

@@ -2,6 +2,11 @@ return {
     "folke/snacks.nvim",
     keys = {
         {
+            "<leader>k",
+            function() Snacks.picker.keymaps() end,
+            desc = "Keymaps",
+        },
+        {
             -- Override LazyVim default: opens lazygit for the buffer's repo,
             -- or prompts to pick a repo when no buffer is open
             "<leader>gg",
