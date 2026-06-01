@@ -16,4 +16,15 @@ return {
       end, { buffer = bufnr, desc = "Blame Commit (Diffview + GitHub link)" })
     end
   end,
+  config = function(_, opts)
+    require("gitsigns").setup(opts)
+    -- Upstream bug: Obj:close() nils repo but object_name survives, so
+    -- current_line_blame can call run_blame on an already-closed git_obj.
+    local blame = require("gitsigns.git.blame")
+    local orig = blame.run_blame
+    blame.run_blame = function(obj, ...)
+      if not obj.repo then return {}, {} end
+      return orig(obj, ...)
+    end
+  end,
 }
