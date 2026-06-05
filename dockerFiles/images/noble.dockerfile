@@ -16,13 +16,14 @@ RUN PLATFORM=$(dpkg --print-architecture) && \
     # If you need tours on arm64, use the `bookworm` image
     && if [ "$PLATFORM" = "amd64" ]; then \
         wget -q --show-progress --progress=bar:force:noscroll -O chrome.deb \
-        https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_136.0.7103.92-1_amd64.deb; \
+        https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_145.0.7632.116-1_amd64.deb \
+        || rm -f chrome.deb; \
     fi \
     # Continue install after fetching debs
     && apt-get update -y \
     && apt-get install -y --no-install-recommends \
     # Install python dependencies for Odoo
-    pylint python3-aiosmtpd python3-asn1crypto python3-astroid python3-babel python3-cbor2 python3-dbfread \
+    pylint python3-aiosmtpd python3-asn1crypto python3-astroid python3-babel python3-cbor2 \
     python3-dateutil python3-dbfread python3-decorator python3-dev python3-docopt python3-docutils python3-feedparser \
     python3-fonttools python3-freezegun python3-geoip2 python3-gevent python3-html2text python3-jinja2 python3-jwt \
     python3-libsass python3-lxml python3-lxml-html-clean python3-mako python3-markdown python3-matplotlib python3-mock \
@@ -43,7 +44,7 @@ RUN PLATFORM=$(dpkg --print-architecture) && \
     # Install wkhtmltopf
     ./wkhtmltox.deb \
     # Install fonts
-    fonts-freefont-ttf fonts-khmeros-core fonts-noto-cjk fonts-ocr-b fonts-vlgothic gsfonts \
+    fonts-freefont-ttf fonts-khmeros-core fonts-noto-cjk fonts-ocr-b gsfonts \
     # Install debugging tools
     less vim \
     # Install iptables to restrict network
@@ -55,11 +56,11 @@ RUN PLATFORM=$(dpkg --print-architecture) && \
     # Upgrade PIP
     && pip install --upgrade pip \
     # Install PIP dependencies for Odoo
-    && pip install --no-cache-dir ebaysdk firebase-admin==2.17.0 inotify pdf417gen \
+    && pip install --no-cache-dir ebaysdk firebase-admin==2.17.0 h11==0.16.0 inotify pdf417gen \
     # Install PIP debug tools
     debugpy ipython pudb \
     # Install node dependencies for Odoo
-    && npm install -g rtlcss@2.5.0 \
+    && npm install --force -g rtlcss@3.4.0 es-check@6.0.0 eslint@8.1.0 prettier@2.7.1 eslint-config-prettier@8.5.0 eslint-plugin-prettier@4.2.1 \
     # Remove the default user ubuntu with UID 1000, so podman can use the host user with UID 1000 if needed.
     # Not sure this is needed for docker ?
     && userdel ubuntu \

@@ -13,7 +13,8 @@ RUN PLATFORM=$(dpkg --print-architecture) && \
     # Fetch Google Chrome (for web tour tests)
     && if [ "$PLATFORM" = "amd64" ]; then \
         wget -q --show-progress --progress=bar:force:noscroll -O chrome.deb \
-        https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_136.0.7103.92-1_amd64.deb; \
+        https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_141.0.7390.54-1_amd64.deb \
+        || rm -f chrome.deb; \
     fi \
     # Continue install after fetching debs
     && apt-get update -y \
@@ -53,11 +54,11 @@ RUN PLATFORM=$(dpkg --print-architecture) && \
     && pip install --upgrade pip \
     && pip install --no-cache-dir --force-reinstall 'urllib3>=1.26.19,<2' \
     # Install PIP dependencies for Odoo
-    && pip install --no-cache-dir ebaysdk firebase-admin==2.17.0 inotify pdf417gen pyOpenSSL \
+    && pip install --no-cache-dir ebaysdk firebase-admin==2.17.0 h11==0.16.0 inotify pdf417gen pyOpenSSL \
     # Install PIP debug tools
     debugpy ipython pudb \
     # Install node dependencies for Odoo
-    && npm install -g rtlcss@2.5.0 \
+    && npm install --force -g rtlcss@3.4.0 es-check@6.0.0 eslint@8.1.0 prettier@2.7.1 eslint-config-prettier@8.5.0 eslint-plugin-prettier@4.2.1 \
     # Cleanup
     && rm -rf ./chrome.deb ./wkhtmltox.deb /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
