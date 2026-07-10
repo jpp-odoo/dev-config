@@ -95,8 +95,8 @@ local function pick_remote(remotes, cb)
     end)
 end
 
---- Open the blame commit for the current line in Diffview and show a GitHub link.
-function M.git_blame_commit()
+--- Return the origin commit URL for the current line via git blame, or nil.
+local function blame_commit_url()
     local file = vim.api.nvim_buf_get_name(0)
     if file == "" then
         vim.notify("No file", vim.log.levels.WARN)
@@ -110,22 +110,31 @@ function M.git_blame_commit()
         vim.notify("Line not yet committed", vim.log.levels.WARN)
         return
     end
-
-    require("diffview")
-    vim.cmd("DiffviewOpen " .. hash .. "^! -C=" .. vim.fn.fnameescape(root))
-
     local remotes = get_remotes(root)
-    local links = {}
     for _, r in ipairs(remotes) do
         if r.name == "origin" then
-            local base = remote_to_https(r.url)
-            table.insert(links, r.name .. ": " .. base .. "/commit/" .. hash)
+            return remote_to_https(r.url) .. "/commit/" .. hash, hash, root
         end
     end
-    if #links > 0 then
-        vim.fn.setreg("+", links[1]:match(": (.+)") or links[1])
-        Snacks.notify(table.concat(links, "\n"), { title = "Blame Commit", timeout = 8000 })
-    end
+    vim.notify("No origin remote found", vim.log.levels.WARN)
+end
+
+--- Open the blame commit for the current line in Diffview and copy the GitHub link.
+function M.git_blame_commit()
+    local url, hash, root = blame_commit_url()
+    if not url then return end
+    require("diffview")
+    vim.cmd("DiffviewOpen " .. hash .. "^! -C=" .. vim.fn.fnameescape(root))
+    vim.fn.setreg("+", url)
+    Snacks.notify(url, { title = "Blame Commit", timeout = 8000 })
+end
+
+--- Copy the commit URL for the current line (git blame) to the clipboard.
+function M.copy_blame_link()
+    local url = blame_commit_url()
+    if not url then return end
+    vim.fn.setreg("+", url)
+    Snacks.notify(url, { title = "Blame Link Copied", timeout = 5000 })
 end
 
 --- Copy a permalink for the current line (or visual selection) to the clipboard.

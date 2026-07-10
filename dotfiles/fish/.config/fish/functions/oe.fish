@@ -21,6 +21,7 @@ function oe --description "Odoo Server"
     set options $options (fish_opt -s n -l no_demo --long-only)
     set options $options (fish_opt -s x -l stop --long-only)
     set options $options (fish_opt -s w -l JSTest --long-only)
+    set options $options (fish_opt -s o -l logfile --long-only -o)
 
     argparse $options -- $argv
 
@@ -46,6 +47,7 @@ function oe --description "Odoo Server"
         printf "  --no_demo             --without-demo=all\n"
         printf "  --stop                --stop-after-init\n"
         printf "  --JSTest              JS Tests, stop after init\n"
+        printf "  --logfile[=NAME]      Write server output to ~/src/odoo-src/log/NAME (default: <db>.log)\n"
         return 0
     end
 
@@ -160,6 +162,13 @@ function oe --description "Odoo Server"
     set dbName "$db_prefix$_flag_d"
     set -a odoo "-d $dbName --db-filter='^$dbName' --db_host=db --db_user=odoo --db_password=odoo"
 
+    if set --query _flag_logfile
+        mkdir -p ~/src/odoo-src/log
+        set -l logname "$_flag_logfile"
+        test -n "$logname"; or set logname "$dbName.log"
+        set -a odoo "--logfile=/src/log/$logname"
+    end
+
     if set --query _flag_log
         set -a odoo "--log-level=$_flag_log"
     else
@@ -197,9 +206,15 @@ function oe --description "Odoo Server"
     end
 
     if set --query _flag_no_demo
-        set -a odoo "--without-demo=True"
+        set -a odoo "--without-demo=all"
     else
-        set -a odoo "--without-demo=False"
+        switch $OdooVersion
+            case "16.0" "17.0" "18.0" "saas-17*" "saas-18*"
+                # default is with demo, no flag needed
+            case "*"
+                # master/19.0+: default changed to no demo, explicitly re-enable with inverted flag
+                set -a odoo "--without-demo=False"
+        end
     end
 
     if set --query _flag_stop

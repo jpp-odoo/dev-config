@@ -14,6 +14,9 @@ return {
       vim.keymap.set("n", "<leader>ghb", function()
         require("utils").git_blame_commit()
       end, { buffer = bufnr, desc = "Blame Commit (Diffview + GitHub link)" })
+      vim.keymap.set("n", "<leader>ghy", function()
+        require("utils").copy_blame_link()
+      end, { buffer = bufnr, desc = "Blame Commit Link (yank)" })
     end
   end,
   config = function(_, opts)

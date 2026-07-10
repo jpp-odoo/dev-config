@@ -33,6 +33,10 @@ vim.keymap.set("o", "P", function()
     return "<Esc>"
 end, { expr = true, desc = "Yank absolute file path" })
 
+vim.keymap.set("v", "<leader>cf", function()
+    require("conform").format({ formatters = { "prettier_odoo" }, lsp_fallback = false })
+end, { desc = "Force format selection (bypass eslintignore)" })
+
 vim.keymap.set({ "n", "x" }, "<leader>gY", function()
     require("utils").copy_git_permalink()
 end, { desc = "Copy Git Permalink" })
