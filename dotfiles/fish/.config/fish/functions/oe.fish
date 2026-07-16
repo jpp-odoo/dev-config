@@ -17,7 +17,6 @@ function oe --description "Odoo Server"
     set options $options (fish_opt -s b -l drop --long-only)
     set options $options (fish_opt -s t -l test -o)
     set options $options (fish_opt -s z -l tags --long-only -r)
-    set options $options (fish_opt -s c -l tour --long-only)
     set options $options (fish_opt -s n -l no_demo --long-only)
     set options $options (fish_opt -s x -l stop --long-only)
     set options $options (fish_opt -s w -l JSTest --long-only)
@@ -35,14 +34,13 @@ function oe --description "Odoo Server"
         printf "  --tutorial            Add the tutorial repo\n"
         printf "  --upgrade             Add the upgrade and upgrade-util repo\n"
         printf "  -d                    Database to use with prefix oe_support_ (default oe_support_{vesion})\n"
-        printf "  -shell                Open the shell for the selected Database\n"
+        printf "  --shell                Open the shell for the selected Database\n"
         printf "  --log                 --log-level=xxx (default : --log-level=warn)\n"
         printf "  --addons              Path to the addons\n"
         printf "  -i                    install modules\n"
         printf "  -u                    update modules\n"
         printf "  --drop                drop DB before start server (if -u xx then -i xx)\n"
         printf "  -t or --test          --test-enable (if params then --test-enable -u xxx)\n"
-        printf "  --tour                enable vnc on the container to show the tour\n"
         printf "  --tags                --test-tags=xx only if test is enable\n"
         printf "  --no_demo             --without-demo=all\n"
         printf "  --stop                --stop-after-init\n"
@@ -80,19 +78,12 @@ function oe --description "Odoo Server"
     if docker container inspect odoo >/dev/null 2>&1
         set containerName odoo2
         set debugpyPort 5679
-        set vncPort 5901
     else
         set containerName odoo
         set debugpyPort 5678
-        set vncPort 5900
     end
 
-    # Change this to ubuntu names and versions !
-    if set --query _flag_tour
-        set imageName "$ubuntuVersion-vnc"
-    else
-        set imageName "$ubuntuVersion"
-    end
+    set imageName "$ubuntuVersion"
 
     # --- Image Check ---
     if not docker image inspect $ubuntuVersion >/dev/null 2>&1
@@ -101,16 +92,10 @@ function oe --description "Odoo Server"
         echo "running : $buildBase"
         eval $buildBase
     end
-    if set --query _flag_tour; and not docker image inspect $imageName >/dev/null 2>&1
-        echo "Building missing image: $imageName"
-        set -l buildVnc docker build -f "~/src/dev-config/dockerFiles/images/vnc.dockerfile" --build-arg "BASE_IMAGE=$ubuntuVersion" -t $imageName ~/src/dev-config/dockerFiles/images/
-        echo "running : $buildVnc"
-        eval $buildVnc
-    end
 
-    # Port 5900 is for vnc ... maybe put it in odoo or odoo2 and change it
     # debugpyPort should be here also -p ..:...
-    set python "docker run --rm -it --privileged --network odoo_dev --name $containerName -e HOST=db -e DISPLAY=:0 -p 5900:5900 -v ~/src/odoo-src/:/src -v ~/src/odoo-src/fileStorage/:/home/odoo_user/.local/share/Odoo/filestore $imageName python3"
+    # DISPLAY/X11 socket are forwarded so headed Chrome (browser_js watch=True/debug tours) renders directly on the host, no VNC needed
+    set python "docker run --rm -it --privileged --network odoo_dev --name $containerName -e HOST=db -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v ~/src/odoo-src/:/src -v ~/src/odoo-src/fileStorage/:/home/odoo_user/.local/share/Odoo/filestore $imageName python3"
     set odoo $python
 
     if not set --query _flag_JSTest; and set --query _flag_debug
@@ -227,7 +212,7 @@ function oe --description "Odoo Server"
 
     # This should be at the begining !
     if set --query _flag_shell
-        $python /src/$OdooVersion/odoo/odoo-bin shell --addons-path=/src/$OdooVersion/odoo/addons,/src/$OdooVersion/enterprise --db_host=db --db_user=odoo --db_password=odoo -d $dbName
+        eval $python /src/$OdooVersion/odoo/odoo-bin shell --addons-path=/src/$OdooVersion/odoo/addons,/src/$OdooVersion/enterprise --db_host=db --db_user=odoo --db_password=odoo -d $dbName
     else
         if set --query _flag_drop
             set_color green

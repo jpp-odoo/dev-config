@@ -101,7 +101,7 @@ git remote set-url --push origin you_should_not_push_on_this_repository
 The `dockerFiles/` directory contains:
 - `docker-compose.yml` — PostgreSQL + Nginx (global services)
 - `nginx.conf` — Reverse proxy for Odoo containers
-- `images/` — Dockerfiles for multiple distros (bookworm, jammy, noble, trixie) with VNC variants
+- `images/` — Dockerfiles per Ubuntu distro (jammy, noble)
 
 Odoo containers are created dynamically by the `oe` fish function, not by docker-compose.
 
