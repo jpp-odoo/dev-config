@@ -65,6 +65,13 @@ RUN PLATFORM=$(dpkg --print-architecture) && \
     RUN useradd -ms /bin/bash odoo_user \
         && mkdir /src && chown odoo_user:odoo_user /src \
         && mkdir -p /home/odoo_user/.local/share/Odoo/filestore && chown -R odoo_user:odoo_user /home/odoo_user/
+
+    # Disable Chrome's built-in update checker: the image pins a fixed Chrome build with no
+    # updater daemon to fulfill it, so headed Chrome (tour tests) throws an "update failed"
+    # dialog that breaks the DevTools websocket connection
+    RUN mkdir -p /etc/opt/chrome/policies/managed \
+        && echo '{"UpdateDefault": 0}' > /etc/opt/chrome/policies/managed/policy.json
+
     USER odoo_user
 
     # Activate the virtual env by default, to run Odoo using the virtual env
