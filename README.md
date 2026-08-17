@@ -32,17 +32,17 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 | `fish` | Fish shell config, custom functions (`co`, `oe`, `osh`, `ide`), completions |
 | `ghostty` | Ghostty terminal (Catppuccin Mocha, JetBrains Mono, transparency) |
 | `git` | Git config and global gitignore (Odoo workflow aliases, split-diffs pager) |
-| `hypr` | Hyprland WM overrides (keybindings, input, lock screen, mic mute fix) |
+| `hypr` | Hyprland WM overrides (input, monitors, one window rule) |
 | `nvim` | NeoVim with LazyVim (LSP, DAP Python, Claude Code, Diffview, git permalink) |
+| `omarchy` | Omarchy shell overrides (status bar layout via `shell.json`) |
 | `starship` | Starship prompt with Catppuccin Mocha palette |
 | `tmux` | Tmux config (C-s prefix, vim-tmux-navigator, Catppuccin) |
 | `tmuxinator` | Tmuxinator layout for Odoo development |
-| `waybar` | Waybar status bar (omarchy overrides) |
 | `yazi` | Yazi file manager with Catppuccin Mocha flavor and git plugin |
 
 ## Prerequisites
 
-Arch Linux with [Omarchy](https://github.com/basecamp/omarchy) desktop environment.
+Arch Linux with [Omarchy](https://github.com/basecamp/omarchy) desktop environment (Quattro/4.0+, Lua-based Hyprland config and Quickshell-based bar).
 
 Required packages:
 
@@ -58,13 +58,24 @@ git clone <repo-url> ~/src/dev-config
 cd ~/src/dev-config/dotfiles
 
 # Stow all packages
-stow -v --target=$HOME atuin catppuccin discord fish ghostty git hypr nvim starship tmux tmuxinator waybar yazi
+stow -v --target=$HOME atuin catppuccin discord fish ghostty git hypr nvim omarchy starship tmux tmuxinator yazi
 
 # Or stow individually
 stow -v --target=$HOME nvim
 ```
 
-> **Note:** Stow creates symlinks. Existing files will cause conflicts — use `stow --adopt` to pull existing files into the repo first.
+> **Note:** Stow creates symlinks. Existing files will cause conflicts — a fresh Omarchy install
+> writes real files into `~/.config/hypr/*.lua` and `~/.config/omarchy/shell.json`, so remove
+> those first (or use `stow --adopt` to pull them into the repo instead of overwriting them).
+>
+> **Note:** the `hypr` package only tracks `hyprland.lua`, `input.lua`, and `monitors.lua` —
+> `looknfeel.lua`, `bindings.lua`, `autostart.lua`, `hyprsunset.conf`, and `xdph.conf` are meant
+> to stay as real, untracked files managed by Omarchy. If `~/.config/hypr` doesn't already exist
+> as a real directory before running `stow`, Stow will symlink the whole directory as a single
+> unit instead of individual files, and anything later written into it (e.g. by
+> `omarchy refresh config`) will land inside this repo instead of on disk. Make sure those real
+> files exist first — `omarchy refresh config hypr/looknfeel.lua` (and similarly for the others)
+> creates them — before stowing `hypr`.
 
 ### Post-install setup
 
@@ -115,16 +126,27 @@ Odoo containers are created dynamically by the `oe` fish function, not by docker
 ## Helper Scripts
 
 - `fix_ssh_passphrase.sh` — Store SSH key passphrase in GNOME Keyring for auto-unlock
-- `setup_mute_fix.sh` — Sync ThinkPad mic mute LED with actual mute state (Hyprland)
 
 ## Omarchy Notes
 
-This repo tracks **personal overrides** on top of [Omarchy](https://github.com/basecamp/omarchy)'s default configs. The `hypr` stow package contains only files with custom modifications:
+This repo tracks **personal overrides** on top of [Omarchy](https://github.com/basecamp/omarchy)'s default configs (Quattro/4.0+: Hyprland config is Lua under `~/.config/hypr/`, loaded after Omarchy's own defaults, and the status bar is a Quickshell plugin configured via `~/.config/omarchy/shell.json`).
 
-- `bindings.conf` — Custom keybindings (tmux, opencode, mic mute fix with LED sync)
-- `input.conf` — US altgr-intl keyboard, natural scroll, custom repeat rate
-- `hyprlock.conf` — Fingerprint unlock, custom placeholder
+The `hypr` stow package contains only the files with real customizations:
 
-Files identical to Omarchy defaults (autostart, hypridle, hyprsunset, xdph) are **not tracked** — Omarchy manages them. `monitors.conf` is machine-specific and must be created manually per device.
+- `input.lua` — US altgr-intl keyboard, natural scroll, custom repeat rate, Ghostty scroll tuning
+- `hyprland.lua` — Omarchy's stock template plus one window rule (XWayland Chrome from the Odoo docker container)
+- `monitors.lua` — machine-specific, must be recreated per device
 
-Capslock remap to Control (held) / Esc (pressed): see [omarchy#1383](https://github.com/basecamp/omarchy/discussions/1383)
+The `omarchy` package's `shell.json` lays out the status bar (menu, workspaces, indicators, media/mpris, clock, weather, system update, tray, agents, bluetooth, network, audio, monitor, power) using Omarchy's first-party Quickshell widgets — no CSS needed, colors follow the active theme.
+
+Capslock remap to Control (held) / Esc (pressed) is done via `keyd` (see [omarchy#1383](https://github.com/basecamp/omarchy/discussions/1383)), not part of this stow repo since it's a root-level system config:
+
+```
+# /etc/keyd/default.conf
+[ids]
+*
+[main]
+capslock = overload(control, esc)
+```
+
+then `sudo systemctl enable --now keyd`.
