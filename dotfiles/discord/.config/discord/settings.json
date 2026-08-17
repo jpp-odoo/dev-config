@@ -5,11 +5,11 @@
   "enableHardwareAcceleration": true,
   "chromiumSwitches": {},
   "asyncVideoInputDeviceInit": false,
-  "IS_MAXIMIZED": false,
+  "IS_MAXIMIZED": true,
   "IS_MINIMIZED": false,
   "enableLibOpenH264Electron": false,
   "openH264Enabled": true,
-  "DESKTOP_TTI_REMOVE_V8_CACHE_CLEAR": true,
+  "DESKTOP_TTI_REMOVE_V8_CACHE_CLEAR": false,
   "DESKTOP_TTI_DNSTCP_WARMUP": true,
   "DESKTOP_TTI_EARLY_UPDATE_CHECK": true,
   "DESKTOP_TTI_UPDATE_BACKOFF_MAX_MS": 10000,
@@ -18,5 +18,6 @@
     "y": 0,
     "width": 1512,
     "height": 910
-  }
+  },
+  "DESKTOP_TTI_SPLASH_USE_WEBP": true
 }
