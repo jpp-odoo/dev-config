@@ -33,7 +33,7 @@ function oe --description "Odoo Server"
         printf "  --design              Add the design-themes repo\n"
         printf "  --tutorial            Add the tutorial repo\n"
         printf "  --upgrade             Add the upgrade and upgrade-util repo\n"
-        printf "  -d                    Database to use with prefix oe_support_ (default oe_support_{vesion})\n"
+        printf "  -d                    Database to use (default: the branch name checked out in ./odoo)\n"
         printf "  --shell                Open the shell for the selected Database\n"
         printf "  --log                 --log-level=xxx (default : --log-level=warn)\n"
         printf "  --addons              Path to the addons\n"
@@ -49,15 +49,16 @@ function oe --description "Odoo Server"
         return 0
     end
 
-    set db_prefix oe_support_
+    _goo_ensure_running
 
     set OdooVersion (path basename (pwd))
-    # Find which ubuntu for each OdooVersion for the moment use :
+    # Find which ubuntu for each OdooVersion for the moment use : prefix-match
+    # since a workspace dir is now "<version>-<branch-desc>", not just "<version>"
     switch $OdooVersion
-        case "16.0" "17.0"
+        case "16.0*" "17.0*"
             # 16.0, 17.0 -> ubuntu:jammy
             set ubuntuVersion jammy
-        case "18.0" "saas-18*" "19.0" "saas-19*" master
+        case "18.0*" "saas-18*" "19.0*" "saas-19*" "master*"
             # 18.0, saas-18.*, 19.0, saas-19.*, master -> ubuntu:noble
             set ubuntuVersion noble
         case "*"
@@ -74,13 +75,14 @@ function oe --description "Odoo Server"
         sleep 3
     end
 
-    # if podman container exists odoo
-    if docker container inspect odoo >/dev/null 2>&1
-        set containerName odoo2
-        set debugpyPort 5679
-    else
-        set containerName odoo
-        set debugpyPort 5678
+    # one container per branch (unlimited concurrent servers, not a fixed
+    # odoo/odoo2 pair) - the branch name is unique by construction (the -jpp
+    # naming convention), so it doubles as container name, db name, and the
+    # nginx vhost (http://<branch>.localhost/, see dockerFiles/nginx.conf)
+    set containerName (git -C odoo rev-parse --abbrev-ref HEAD)
+    if test (docker inspect -f '{{.State.Running}}' $containerName 2>/dev/null) = true
+        echo "already running: http://$containerName.localhost/"
+        return 0
     end
 
     set imageName "$ubuntuVersion"
@@ -95,7 +97,7 @@ function oe --description "Odoo Server"
 
     # debugpyPort should be here also -p ..:...
     # DISPLAY/X11 socket are forwarded so headed Chrome (browser_js watch=True/debug tours) renders directly on the host, no VNC needed
-    set python "docker run --rm -it --privileged --network odoo_dev --name $containerName -e HOST=db -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v ~/src/odoo-src/:/src -v ~/src/odoo-src/fileStorage/:/home/odoo_user/.local/share/Odoo/filestore $imageName python3"
+    set python "docker run --rm -it --privileged --shm-size=1g --network odoo_dev --name $containerName -e HOST=db -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v ~/src/odoo-src/:/src -v ~/src/odoo-src/fileStorage/:/home/odoo_user/.local/share/Odoo/filestore $imageName python3"
     set odoo $python
 
     if not set --query _flag_JSTest; and set --query _flag_debug
@@ -143,8 +145,8 @@ function oe --description "Odoo Server"
             set _flag_i web_studio
         end
     end
-    set --query _flag_d; or set _flag_d $OdooVersion
-    set dbName "$db_prefix$_flag_d"
+    set --query _flag_d; or set _flag_d $containerName
+    set dbName "$_flag_d"
     set -a odoo "-d $dbName --db-filter='^$dbName' --db_host=db --db_user=odoo --db_password=odoo"
 
     if set --query _flag_logfile
@@ -194,7 +196,7 @@ function oe --description "Odoo Server"
         set -a odoo "--without-demo=all"
     else
         switch $OdooVersion
-            case "16.0" "17.0" "18.0" "saas-17*" "saas-18*"
+            case "16.0*" "17.0*" "18.0*" "saas-17*" "saas-18*"
                 # default is with demo, no flag needed
             case "*"
                 # master/19.0+: default changed to no demo, explicitly re-enable with inverted flag
