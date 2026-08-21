@@ -49,8 +49,6 @@ function oe --description "Odoo Server"
         return 0
     end
 
-    _goo_ensure_running
-
     set OdooVersion (path basename (pwd))
     # Find which ubuntu for each OdooVersion for the moment use : prefix-match
     # since a workspace dir is now "<version>-<branch-desc>", not just "<version>"

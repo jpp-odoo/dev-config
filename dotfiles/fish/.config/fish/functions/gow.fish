@@ -1,4 +1,4 @@
-function gow --description 'Create a new odoo/enterprise worktree pair via goo and launch ide.fish'
+function gow --description 'Create a new odoo/enterprise worktree pair (plain git) and launch ide.fish'
     set -l options (fish_opt -s b -l branch --long-only -r)
     argparse $options -- $argv
 
@@ -7,8 +7,6 @@ function gow --description 'Create a new odoo/enterprise worktree pair via goo a
         echo "       gow <version> --branch <existing-branch-name>" >&2
         return 1
     end
-
-    _goo_ensure_running
 
     set -l create_args $argv
     if set --query _flag_branch
