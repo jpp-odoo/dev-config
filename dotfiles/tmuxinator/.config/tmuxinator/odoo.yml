@@ -13,3 +13,6 @@ windows:
         - cd odoo
         - cd enterprise
   - server:
+  - claude:
+      panes:
+        - claude
