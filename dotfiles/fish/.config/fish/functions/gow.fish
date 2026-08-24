@@ -93,5 +93,5 @@ function gow --description 'Create a new odoo/enterprise worktree pair (plain gi
     echo "python_path = \"/usr/bin/python\"" >> "$ws_dir/odools.toml"
 
     cd $ws_dir
-    and ide.fish
+    and ide
 end
