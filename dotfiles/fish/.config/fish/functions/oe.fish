@@ -83,7 +83,6 @@ function oe --description "Odoo Server"
         set slot (math $slot + 1)
         set containerName "dev$slot"
     end
-    echo "will be reachable at: http://$containerName.localhost/"
 
     set -l branchName (git -C odoo rev-parse --abbrev-ref HEAD)
 
