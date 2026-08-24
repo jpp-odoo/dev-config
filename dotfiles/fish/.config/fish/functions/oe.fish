@@ -73,9 +73,21 @@ function oe --description "Odoo Server"
         sleep 3
     end
 
+    set -l branchName (git -C odoo rev-parse --abbrev-ref HEAD)
+
+    # reuse an already-running container for this workspace instead of
+    # starting a redundant one (matched by the db name it was launched with,
+    # which defaults to $branchName -- see the -d default further down)
+    for existing in (docker ps --format '{{.Names}}' | string match -r '^dev[0-9]*$')
+        if docker inspect -f '{{.Config.Cmd}}' $existing 2>/dev/null | string match -q "*-d $branchName *"
+            echo "already running: http://$existing.localhost/"
+            return 0
+        end
+    end
+
     # dev, dev1, dev2, ... - unlimited slots (not a fixed odoo/odoo2 pair),
     # order of starting decides the number; reachable at http://<name>.localhost/
-    # (see dockerFiles/nginx.conf). Db name stays branch-based (below), separate
+    # (see dockerFiles/nginx.conf). Db name stays branch-based (above), separate
     # from this slot name.
     set -l slot 0
     set containerName dev
@@ -83,8 +95,6 @@ function oe --description "Odoo Server"
         set slot (math $slot + 1)
         set containerName "dev$slot"
     end
-
-    set -l branchName (git -C odoo rev-parse --abbrev-ref HEAD)
 
     set imageName "$ubuntuVersion"
 
