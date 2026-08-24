@@ -108,7 +108,7 @@ function oe --description "Odoo Server"
 
     # debugpyPort should be here also -p ..:...
     # DISPLAY/X11 socket are forwarded so headed Chrome (browser_js watch=True/debug tours) renders directly on the host, no VNC needed
-    set python "docker run --rm -it --privileged --shm-size=1g --network odoo_dev --name $containerName -e HOST=db -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v ~/src/odoo-src/:/src -v ~/src/odoo-src/fileStorage/:/home/odoo_user/.local/share/Odoo/filestore -v ~/src/goo/addons:/goo-addons:ro $imageName python3"
+    set python "docker run --rm -it --privileged --shm-size=1g --network odoo_dev --name $containerName -e HOST=db -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v ~/src/odoo-src/:/src -v ~/src/odoo-src/fileStorage/:/home/odoo_user/.local/share/Odoo/filestore $imageName python3"
     set odoo $python
 
     if not set --query _flag_JSTest; and set --query _flag_debug
@@ -137,10 +137,7 @@ function oe --description "Odoo Server"
 
     set -a odoo "/src/$OdooVersion/odoo/odoo-bin"
 
-    # /goo-addons: goo's own dev-only modules (autologin, used by the /odoo and
-    # /web/tests buttons in the goo dashboard) -- auto_install, just needs to
-    # be on the addons path once for Odoo to pick it up
-    set -a odoo "--addons-path=/src/$OdooVersion/odoo/addons,/src/$OdooVersion/odoo/odoo/addons,/goo-addons$addons"
+    set -a odoo "--addons-path=/src/$OdooVersion/odoo/addons,/src/$OdooVersion/odoo/odoo/addons$addons"
 
     if set --query _flag_upgrade
         set -a odoo "--upgrade-path=/src/upgrade-util/src,/src/upgrade/migrations"
