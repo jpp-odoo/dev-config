@@ -73,15 +73,19 @@ function oe --description "Odoo Server"
         sleep 3
     end
 
-    # one container per branch (unlimited concurrent servers, not a fixed
-    # odoo/odoo2 pair) - the branch name is unique by construction (the -jpp
-    # naming convention), so it doubles as container name, db name, and the
-    # nginx vhost (http://<branch>.localhost/, see dockerFiles/nginx.conf)
-    set containerName (git -C odoo rev-parse --abbrev-ref HEAD)
-    if test (docker inspect -f '{{.State.Running}}' $containerName 2>/dev/null) = true
-        echo "already running: http://$containerName.localhost/"
-        return 0
+    # dev, dev1, dev2, ... - unlimited slots (not a fixed odoo/odoo2 pair),
+    # order of starting decides the number; reachable at http://<name>.localhost/
+    # (see dockerFiles/nginx.conf). Db name stays branch-based (below), separate
+    # from this slot name.
+    set -l slot 0
+    set containerName dev
+    while docker container inspect $containerName >/dev/null 2>&1
+        set slot (math $slot + 1)
+        set containerName "dev$slot"
     end
+    echo "will be reachable at: http://$containerName.localhost/"
+
+    set -l branchName (git -C odoo rev-parse --abbrev-ref HEAD)
 
     set imageName "$ubuntuVersion"
 
@@ -143,7 +147,7 @@ function oe --description "Odoo Server"
             set _flag_i web_studio
         end
     end
-    set --query _flag_d; or set _flag_d $containerName
+    set --query _flag_d; or set _flag_d $branchName
     set dbName "$_flag_d"
     set -a odoo "-d $dbName --db-filter='^$dbName' --db_host=db --db_user=odoo --db_password=odoo"
 
@@ -226,6 +230,9 @@ function oe --description "Odoo Server"
         end
         set_color green
         echo $odoo
+        set_color Normal
+        set_color yellow
+        echo "→ http://$containerName.localhost/"
         set_color Normal
         eval $odoo
     end
