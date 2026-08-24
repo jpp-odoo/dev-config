@@ -13,24 +13,38 @@ function gow --description 'Create a new odoo/enterprise worktree pair (plain gi
 
     set -l branch
     set -l name
+    set -l ws_dir
     if set --query _flag_branch
         set branch $_flag_branch
         set name (string replace -ra '[^a-zA-Z0-9._-]+' '-' -- $branch | string trim -c -)
+        set ws_dir "$odoo_src/$name"
+        # directory-only collision check: the branch is user-specified and
+        # already exists (that's the point of --branch), so it never needs renaming
+        set -l i 2
+        while test -e $ws_dir
+            set name "$name-$i"
+            set ws_dir "$odoo_src/$name"
+            set i (math $i + 1)
+        end
     else
         if test (count $argv) -lt 2
             echo "usage: gow <version> <branch-description>" >&2
             return 1
         end
-        set name (string replace -ra '[^a-zA-Z0-9._-]+' '-' -- "$odoo_version-$argv[2..-1]" | string trim -c -)
+        set -l base_name (string replace -ra '[^a-zA-Z0-9._-]+' '-' -- "$odoo_version-$argv[2..-1]" | string trim -c -)
+        set name $base_name
         set branch "$name-jpp"
-    end
-
-    set -l ws_dir "$odoo_src/$name"
-    set -l i 2
-    while test -e $ws_dir
-        set name "$name-$i"
         set ws_dir "$odoo_src/$name"
-        set i (math $i + 1)
+        # check both the directory AND the branch itself -- a stale leftover
+        # branch (e.g. from an earlier failed/rolled-back attempt) must bump
+        # the name too, or a freshly-renamed dir still collides on the branch
+        set -l i 2
+        while test -e $ws_dir; or git -C "$odoo_src/master/odoo" rev-parse --verify --quiet "refs/heads/$branch" >/dev/null 2>&1
+            set name "$base_name-$i"
+            set branch "$name-jpp"
+            set ws_dir "$odoo_src/$name"
+            set i (math $i + 1)
+        end
     end
 
     set -l created_repos
