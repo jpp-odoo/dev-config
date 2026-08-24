@@ -1,4 +1,4 @@
-function gow --description 'Create a new odoo/enterprise worktree pair (plain git) and launch ide.fish'
+function gow --description 'Create a new odoo/enterprise worktree pair (plain git) and launch ide'
     set -l options (fish_opt -s b -l branch --long-only -r)
     argparse $options -- $argv
 
@@ -13,38 +13,25 @@ function gow --description 'Create a new odoo/enterprise worktree pair (plain gi
 
     set -l branch
     set -l name
-    set -l ws_dir
     if set --query _flag_branch
         set branch $_flag_branch
         set name (string replace -ra '[^a-zA-Z0-9._-]+' '-' -- $branch | string trim -c -)
-        set ws_dir "$odoo_src/$name"
-        # directory-only collision check: the branch is user-specified and
-        # already exists (that's the point of --branch), so it never needs renaming
-        set -l i 2
-        while test -e $ws_dir
-            set name "$name-$i"
-            set ws_dir "$odoo_src/$name"
-            set i (math $i + 1)
-        end
     else
         if test (count $argv) -lt 2
             echo "usage: gow <version> <branch-description>" >&2
             return 1
         end
-        set -l base_name (string replace -ra '[^a-zA-Z0-9._-]+' '-' -- "$odoo_version-$argv[2..-1]" | string trim -c -)
-        set name $base_name
+        set name (string replace -ra '[^a-zA-Z0-9._-]+' '-' -- "$odoo_version-$argv[2..-1]" | string trim -c -)
         set branch "$name-jpp"
-        set ws_dir "$odoo_src/$name"
-        # check both the directory AND the branch itself -- a stale leftover
-        # branch (e.g. from an earlier failed/rolled-back attempt) must bump
-        # the name too, or a freshly-renamed dir still collides on the branch
-        set -l i 2
-        while test -e $ws_dir; or git -C "$odoo_src/master/odoo" rev-parse --verify --quiet "refs/heads/$branch" >/dev/null 2>&1
-            set name "$base_name-$i"
-            set branch "$name-jpp"
-            set ws_dir "$odoo_src/$name"
-            set i (math $i + 1)
-        end
+    end
+
+    set -l ws_dir "$odoo_src/$name"
+
+    if test -e $ws_dir
+        echo "workspace $name already exists, opening it" >&2
+        cd $ws_dir
+        and ide
+        return
     end
 
     set -l created_repos
@@ -57,13 +44,14 @@ function gow --description 'Create a new odoo/enterprise worktree pair (plain gi
         set -l wt_path "$ws_dir/$repo"
         set -l attach 0
 
-        if set --query _flag_branch
-            if git -C $main_path rev-parse --verify --quiet "refs/heads/$branch" >/dev/null 2>&1
-                set attach 1
-            else if git -C $main_path ls-remote --exit-code --heads origin $branch >/dev/null 2>&1
-                git -C $main_path fetch origin "$branch:$branch" >/dev/null 2>&1
-                and set attach 1
-            end
+        # the branch might already exist (locally, or on origin) from an
+        # earlier attempt or a colleague's push -- attach to it rather than
+        # erroring or minting a numbered variant
+        if git -C $main_path rev-parse --verify --quiet "refs/heads/$branch" >/dev/null 2>&1
+            set attach 1
+        else if git -C $main_path ls-remote --exit-code --heads origin $branch >/dev/null 2>&1
+            git -C $main_path fetch origin "$branch:$branch" >/dev/null 2>&1
+            and set attach 1
         end
 
         if test $attach -eq 1
