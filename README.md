@@ -32,6 +32,7 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 | `fish` | Fish shell config, custom functions (`co`, `oe`, `osh`, `ide`), completions |
 | `ghostty` | Ghostty terminal (Catppuccin Mocha, JetBrains Mono, transparency) |
 | `git` | Git config and global gitignore (Odoo workflow aliases, split-diffs pager) |
+| `goo` | goo's live config.json (repos, workspaces, settings) — grows over time, commit to snapshot |
 | `hypr` | Hyprland WM overrides (input, monitors, one window rule) |
 | `nvim` | NeoVim with LazyVim (LSP, DAP Python, Claude Code, Diffview, git permalink) |
 | `omarchy` | Omarchy shell overrides (status bar layout via `shell.json`) |

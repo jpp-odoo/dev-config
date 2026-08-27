@@ -1,0 +1,243 @@
+{
+  "rev": 72,
+  "config": {
+    "work_dir": "/home/odoo/work",
+    "venv_activate": "",
+    "server_path": "/home/odoo/work/community/odoo-bin",
+    "worktree_dir": "/home/jpp/src/odoo-src",
+    "db_user": "odoo",
+    "db_password": "odoo",
+    "db_host": "127.0.0.1",
+    "db_port": "5432",
+    "filestore": "/home/jpp/src/odoo-src/fileStorage/",
+    "log_level": "",
+    "editor": "bash -c 'hyprctl eval \"hl.dispatch(hl.dsp.focus({ workspace = \\\"empty\\\" }))\" >/dev/null; ghostty +new-window --working-directory=\"$(dirname \"$1\")\" --command=\"fish -c ide\"' _",
+    "main_repo_id": "odoo",
+    "launch_mode": "docker",
+    "docker_network": "goo_odoo",
+    "docker_postgres_image": "postgres:16",
+    "docker_postgres_container": "goo-postgres",
+    "docker_postgres_port": "5433",
+    "docker_postgres_volume": "b9a990150ac69592e0c6968b04ef91e41596ff1c8f2e801c62b9743f56c2826d",
+    "docker_nginx_image": "nginx:alpine",
+    "docker_nginx_container": "goo-nginx",
+    "docker_nginx_port": "80",
+    "docker_mount_path": "/src",
+    "docker_filestore_mount": "/home/odoo_user/.local/share/Odoo/filestore",
+    "docker_container_user": "",
+    "docker_extra_run_args": "",
+    "default_workspace_location": "worktree",
+    "auto_open_event_log": false,
+    "update_check": true,
+    "rust_bundler": false,
+    "workspace_categories_enabled": false,
+    "autologin_links": false,
+    "cleanup_enabled": true,
+    "docker_headed_browser": false,
+    "start": {
+      "repos": [
+        "community"
+      ],
+      "db": "test_db",
+      "on_create_args": "-i sale_management",
+      "other_args": "--dev all"
+    },
+    "tabs": [
+      {
+        "id": "workspaces",
+        "visible": true
+      },
+      {
+        "id": "branches",
+        "visible": true
+      },
+      {
+        "id": "review-queue",
+        "visible": true
+      },
+      {
+        "id": "todo",
+        "visible": true
+      },
+      {
+        "id": "databases",
+        "visible": true
+      },
+      {
+        "id": "nightly",
+        "visible": true
+      },
+      {
+        "id": "memory",
+        "visible": true
+      },
+      {
+        "id": "ci",
+        "visible": true
+      },
+      {
+        "id": "config",
+        "visible": true
+      }
+    ],
+    "links": [],
+    "test_presets": [
+      {
+        "tags": "/web:WebSuite[@web]"
+      }
+    ],
+    "workspace_categories": [
+      {
+        "id": "dev"
+      },
+      {
+        "id": "base"
+      }
+    ],
+    "reviews": [],
+    "docker_images": [
+      {
+        "id": "jammy",
+        "label": "jammy (16.0/17.0)",
+        "versions": [
+          "16.0",
+          "17.0"
+        ],
+        "image": "jammy",
+        "dockerfile_path": "/home/jpp/src/dev-config/dockerFiles/images/jammy.dockerfile",
+        "is_default": false
+      },
+      {
+        "id": "noble",
+        "label": "noble (18.0+/master)",
+        "versions": [
+          "18.0",
+          "saas-18",
+          "19.0",
+          "saas-19",
+          "master"
+        ],
+        "image": "noble",
+        "dockerfile_path": "/home/jpp/src/dev-config/dockerFiles/images/noble.dockerfile",
+        "is_default": true
+      }
+    ],
+    "repos": [
+      {
+        "id": "odoo",
+        "path": "/home/jpp/src/odoo-src/master/odoo",
+        "github": "odoo/odoo",
+        "pull_remote": "origin",
+        "push_remote": "dev",
+        "favorite": true,
+        "external": false,
+        "autoreload": false
+      },
+      {
+        "id": "enterprise",
+        "path": "/home/jpp/src/odoo-src/master/enterprise",
+        "github": "odoo/enterprise",
+        "pull_remote": "origin",
+        "push_remote": "dev",
+        "favorite": true,
+        "external": false,
+        "autoreload": false
+      }
+    ],
+    "workspaces": [
+      {
+        "id": "master-url_search-jpp",
+        "name": "master-url_search-jpp",
+        "created_at": "2026-08-24T09:17:19.397682+00:00",
+        "last_activity": "2026-08-27T05:52:04.161Z",
+        "favorite": false,
+        "category": "",
+        "parent": "",
+        "notes": "",
+        "db": "master-url_search-jpp",
+        "on_create_args": "",
+        "demo_data": true,
+        "location": "worktree",
+        "worktree": {
+          "base": "",
+          "dir": "/home/jpp/src/odoo-src/master-url_search-jpp"
+        },
+        "port": null,
+        "checkouts": [
+          {
+            "repo": "odoo",
+            "branch": "master-url_search-jpp"
+          },
+          {
+            "repo": "enterprise",
+            "branch": "master-url_search-jpp"
+          }
+        ]
+      },
+      {
+        "id": "master-x2many_tags_field-jpp",
+        "name": "master-x2many_tags_field-jpp",
+        "created_at": "2026-08-25T09:01:30.463510+00:00",
+        "last_activity": "2026-08-27T08:43:25.892Z",
+        "favorite": false,
+        "category": "",
+        "parent": "",
+        "notes": "",
+        "db": "master-x2many_tags_field-jpp",
+        "on_create_args": "",
+        "demo_data": true,
+        "location": "worktree",
+        "worktree": {
+          "base": "",
+          "dir": "/home/jpp/src/odoo-src/master-x2many_tags_field-jpp"
+        },
+        "port": null,
+        "checkouts": [
+          {
+            "repo": "odoo",
+            "branch": "master-x2many_tags_field-jpp"
+          },
+          {
+            "repo": "enterprise",
+            "branch": "master-x2many_tags_field-jpp"
+          }
+        ]
+      },
+      {
+        "id": "wt-master-clickbot_exception_records-jpp",
+        "name": "master-clickbot_exception_records-jpp",
+        "created_at": "2026-08-27T07:27:46.357Z",
+        "last_activity": "2026-08-27T07:28:30.284Z",
+        "favorite": false,
+        "category": "",
+        "parent": "",
+        "notes": "",
+        "db": "master-clickbot_exception_records-jpp",
+        "on_create_args": "",
+        "demo_data": false,
+        "location": "worktree",
+        "worktree": {
+          "base": "",
+          "dir": "/home/jpp/src/odoo-src/master-clickbot_exception_records-jpp"
+        },
+        "port": 8070,
+        "checkouts": [
+          {
+            "repo": "odoo",
+            "branch": "master-clickbot_exception_records-jpp"
+          },
+          {
+            "repo": "enterprise",
+            "branch": "master-clickbot_exception_records-jpp"
+          }
+        ]
+      }
+    ],
+    "templates": []
+  },
+  "state": {
+    "active_workspace": "",
+    "claude_model": "",
+    "test_history": []
+  }
+}
