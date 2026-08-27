@@ -1,0 +1,13 @@
+[Unit]
+Description=goo - GED Odoo Overseer
+After=graphical-session.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/src/goo
+ExecStart=/usr/bin/python3 %h/src/goo/goo.py
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target
