@@ -31,6 +31,7 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 | `catppuccin` | Catppuccin Mocha theme files (eza, fzf, lazygit) |
 | `discord` | Discord desktop settings |
 | `fish` | Fish shell config, custom functions (`co`, `oe`, `osh`, `ide`), completions |
+| `ghostinator` | Saved `ghostinator` layouts (tmuxinator-for-Ghostty, `~/src/ghostinator`) |
 | `ghostty` | Ghostty terminal (Catppuccin Mocha, JetBrains Mono, transparency) |
 | `git` | Git config and global gitignore (Odoo workflow aliases, split-diffs pager) |
 | `goo` | goo's live config.json (repos, workspaces, settings) — grows over time, commit to snapshot |
@@ -61,7 +62,7 @@ git clone <repo-url> ~/src/dev-config
 cd ~/src/dev-config/dotfiles
 
 # Stow all packages
-stow -v --target=$HOME agent-sandbox atuin catppuccin discord fish ghostty git hypr mise nvim omarchy starship tmux tmuxinator yazi
+stow -v --target=$HOME agent-sandbox atuin catppuccin discord fish ghostinator ghostty git hypr mise nvim omarchy starship tmux tmuxinator yazi
 
 # Or stow individually
 stow -v --target=$HOME nvim
