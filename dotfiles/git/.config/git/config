@@ -36,3 +36,5 @@
 
 [split-diffs]
 	theme-name = github-dark-dim
+[url "ssh://git@ssh.github.com:443/"]
+	insteadOf = git@github.com:
