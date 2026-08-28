@@ -71,14 +71,14 @@ stow -v --target=$HOME nvim
 > writes real files into `~/.config/hypr/*.lua` and `~/.config/omarchy/shell.json`, so remove
 > those first (or use `stow --adopt` to pull them into the repo instead of overwriting them).
 >
-> **Note:** the `hypr` package only tracks `hyprland.lua`, `input.lua`, and `monitors.lua` —
-> `looknfeel.lua`, `bindings.lua`, `autostart.lua`, `hyprsunset.conf`, and `xdph.conf` are meant
-> to stay as real, untracked files managed by Omarchy. If `~/.config/hypr` doesn't already exist
-> as a real directory before running `stow`, Stow will symlink the whole directory as a single
-> unit instead of individual files, and anything later written into it (e.g. by
-> `omarchy refresh config`) will land inside this repo instead of on disk. Make sure those real
-> files exist first — `omarchy refresh config hypr/looknfeel.lua` (and similarly for the others)
-> creates them — before stowing `hypr`.
+> **Note:** the `hypr` package tracks `hyprland.lua`, `input.lua`, `monitors.lua`,
+> `looknfeel.lua`, `bindings.lua`, and `autostart.lua`. `hyprsunset.conf` and `xdph.conf` are
+> the only ones left as real, untracked files managed by Omarchy. If `~/.config/hypr` doesn't
+> already exist as a real directory before running `stow`, Stow will symlink the whole directory
+> as a single unit instead of individual files, and anything later written into it (e.g. by
+> `omarchy refresh config`) will land inside this repo instead of on disk. Make sure
+> `~/.config/hypr` exists as a real directory (a fresh Omarchy install creates it) before
+> stowing `hypr`.
 >
 > **Note:** `agent-sandbox` expects Claude Code already installed natively at `~/.local/bin/claude`
 > (`curl -fsSL https://claude.ai/install.sh | bash`) — it wraps that binary, it doesn't install
@@ -139,11 +139,14 @@ Odoo containers are created dynamically by the `oe` fish function, not by docker
 
 This repo tracks **personal overrides** on top of [Omarchy](https://github.com/basecamp/omarchy)'s default configs (Quattro/4.0+: Hyprland config is Lua under `~/.config/hypr/`, loaded after Omarchy's own defaults, and the status bar is a Quickshell plugin configured via `~/.config/omarchy/shell.json`).
 
-The `hypr` stow package contains only the files with real customizations:
+The `hypr` stow package contains:
 
 - `input.lua` — US altgr-intl keyboard, natural scroll, custom repeat rate, Ghostty scroll tuning
 - `hyprland.lua` — Omarchy's stock template plus one window rule (XWayland Chrome from the Odoo docker container)
 - `monitors.lua` — machine-specific, must be recreated per device
+- `looknfeel.lua` — niri-like layout: `general.layout = "scrolling"` (Hyprland's native scrolling/column layout, always on)
+- `bindings.lua` — SUPER+TAB toggles the scrolloverview plugin's niri-style overview; "Next workspace" moved to SUPER+PAGE_DOWN to make room
+- `autostart.lua` — `hyprpm reload -n` on login, to load the scrolloverview plugin
 
 The `omarchy` package's `shell.json` lays out the status bar (menu, workspaces, indicators, media/mpris, clock, weather, system update, tray, agents, bluetooth, network, audio, monitor, power) using Omarchy's first-party Quickshell widgets — no CSS needed, colors follow the active theme.
 
