@@ -26,6 +26,7 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 
 | Package | Description |
 |---------|-------------|
+| `agent-sandbox` | Bubblewrap-sandboxed Claude Code (`~/.local/libexec/agent-sandbox/claude`) + a `PATH` entry (`~/.config/environment.d/`) so it wins over the raw binary for every launcher, not just fish |
 | `atuin` | Shell history sync and search |
 | `catppuccin` | Catppuccin Mocha theme files (eza, fzf, lazygit) |
 | `discord` | Discord desktop settings |
@@ -34,6 +35,7 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 | `git` | Git config and global gitignore (Odoo workflow aliases, split-diffs pager) |
 | `goo` | goo's live config.json (repos, workspaces, settings) — grows over time, commit to snapshot |
 | `hypr` | Hyprland WM overrides (input, monitors, one window rule) |
+| `mise` | Global mise tool versions (`~/.config/mise/config.toml`) — codex, gemini, gh, node |
 | `nvim` | NeoVim with LazyVim (LSP, DAP Python, Claude Code, Diffview, git permalink) |
 | `omarchy` | Omarchy shell overrides (status bar layout via `shell.json`) |
 | `starship` | Starship prompt with Catppuccin Mocha palette |
@@ -59,7 +61,7 @@ git clone <repo-url> ~/src/dev-config
 cd ~/src/dev-config/dotfiles
 
 # Stow all packages
-stow -v --target=$HOME atuin catppuccin discord fish ghostty git hypr nvim omarchy starship tmux tmuxinator yazi
+stow -v --target=$HOME agent-sandbox atuin catppuccin discord fish ghostty git hypr mise nvim omarchy starship tmux tmuxinator yazi
 
 # Or stow individually
 stow -v --target=$HOME nvim
@@ -77,6 +79,11 @@ stow -v --target=$HOME nvim
 > `omarchy refresh config`) will land inside this repo instead of on disk. Make sure those real
 > files exist first — `omarchy refresh config hypr/looknfeel.lua` (and similarly for the others)
 > creates them — before stowing `hypr`.
+>
+> **Note:** `agent-sandbox` expects Claude Code already installed natively at `~/.local/bin/claude`
+> (`curl -fsSL https://claude.ai/install.sh | bash`) — it wraps that binary, it doesn't install
+> one. The `PATH` entry in `~/.config/environment.d/` is only read by systemd at user-session
+> start, so log out/in (or reboot) after stowing it for `PATH` ordering to actually change.
 
 ### Post-install setup
 

@@ -1,0 +1,78 @@
+#!/bin/bash
+# Bubblewrap-sandboxed Claude Code. Sits ahead of ~/.local/bin on PATH so
+# every launcher of a bare `claude` (fish, bash, Omarchy's agent picker/
+# keybindings, which exec it directly with no shell involved) gets the same
+# sandbox. Canonical copy of the logic that used to live only in the fish
+# function ~/.config/fish/functions/claude.fish.
+
+if test "$(id -u)" -eq 0; then
+    echo "Do not run this as root" >&2
+    exit 1
+fi
+
+claude_bin="$HOME/.local/bin/claude"
+if [ ! -x "$claude_bin" ]; then
+    echo "Claude Code not found at $claude_bin" >&2
+    exit 1
+fi
+
+claude_dirs=("$HOME/.cache/claude" "$HOME/.cache/claude-cli-nodejs" "$HOME/.claude" "$HOME/.local/state/claude")
+for d in "${claude_dirs[@]}"; do
+    mkdir -p "$d"
+done
+claude_files=("$HOME/.claude.json")
+for f in "${claude_files[@]}"; do
+    [ -e "$f" ] || touch "$f"
+done
+
+allow_dirs=("$HOME/src")
+claude_args=()
+i=1
+while [ "$i" -le "$#" ]; do
+    arg="${!i}"
+    if [ "$arg" = "--add-dir" ]; then
+        i=$((i + 1))
+        allow_dirs+=("$(realpath "${!i}")")
+    else
+        claude_args+=("$arg")
+    fi
+    i=$((i + 1))
+done
+
+bwrap_args=(
+    --bind "$HOME/.local/bin/claude" "$HOME/.local/bin/claude"
+    --bind "$HOME/.local/share/claude" "$HOME/.local/share/claude"
+    --ro-bind /run/systemd/resolve /run/systemd/resolve
+    --ro-bind /etc/hosts /etc/hosts
+    --ro-bind /etc/ssl /etc/ssl
+    --symlink ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+    --ro-bind /usr /usr
+    --symlink usr/bin /bin --symlink usr/sbin /sbin
+    --symlink usr/lib /lib --symlink usr/lib64 /lib64
+    --ro-bind /etc/passwd /etc/passwd
+    --bind /var/run/docker.sock /var/run/docker.sock
+    --dev /dev --proc /proc --tmpfs /tmp
+    --chdir "${allow_dirs[0]}"
+    --unshare-pid --unshare-ipc --unshare-uts --unshare-cgroup
+    --die-with-parent --new-session --hostname claude-sandbox
+)
+
+for d in "${claude_dirs[@]}" "${claude_files[@]}"; do
+    bwrap_args+=(--bind "$d" "$d")
+done
+for d in "${allow_dirs[@]}"; do
+    bwrap_args+=(--bind "$d" "$d")
+    claude_args+=(--add-dir "$d")
+done
+
+forbidden=("$HOME/.ssh" "$HOME/.gnupg" "$HOME/.config/gh" \
+    "$HOME/.config/1Password" "$HOME/.config/Bitwarden" "$HOME/.mozilla" \
+    "$HOME/.docker" "$HOME/.aws")
+for d in "${forbidden[@]}"; do
+    if bwrap "${bwrap_args[@]}" -- test -e "$d" 2>/dev/null; then
+        echo "FAIL: $d is reachable inside the sandbox, aborting" >&2
+        exit 1
+    fi
+done
+
+exec bwrap "${bwrap_args[@]}" -- "$claude_bin" "${claude_args[@]}"
