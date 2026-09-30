@@ -16,8 +16,8 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 
 - **Shell**: Fish + Starship prompt + Atuin history
 - **Editor**: NeoVim (LazyVim)
-- **Terminal**: Ghostty
-- **Multiplexer**: Tmux + Tmuxinator
+- **Terminal**: Foot
+- **Multiplexer**: herdr (one window, a workspace per project, agent-aware)
 - **File manager**: Yazi
 - **Window manager**: Hyprland (via Omarchy)
 - **Dev infra**: Docker-based Odoo development environment
@@ -31,9 +31,7 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 | `claude` | Global Claude Code config (`~/.claude/`): `CLAUDE.md`, `settings.json` (status line, herdr + claudio hooks), status line script, Omarchy theme, and skills: `fresh-review` (context-free subagent review), `odoo-test` (run Odoo tests in Goo's Docker setup) |
 | `catppuccin` | Catppuccin Mocha theme files (eza, fzf, lazygit) |
 | `discord` | Discord desktop settings |
-| `fish` | Fish shell config, custom functions (`co`, `oe`, `osh`, `ide`, `herd`, `claudio`), completions |
-| `ghostinator` | Saved `ghostinator` layouts (tmuxinator-for-Ghostty, `~/src/ghostinator`) |
-| `ghostty` | Ghostty terminal (Catppuccin Mocha, JetBrains Mono, transparency) |
+| `fish` | Fish shell config, custom functions (`herd`, `claudio`, `osh`), completions |
 | `git` | Git config and global gitignore (Odoo workflow aliases, split-diffs pager) |
 | `goo` | goo's live config.json (repos, workspaces, settings) — grows over time, commit to snapshot |
 | `hypr` | Hyprland WM overrides (input, monitors, one window rule) |
@@ -41,8 +39,6 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 | `nvim` | NeoVim with LazyVim (LSP, DAP Python, Claude Code, Diffview, git permalink) |
 | `omarchy` | Omarchy shell overrides (status bar layout via `shell.json`) |
 | `starship` | Starship prompt with Catppuccin Mocha palette |
-| `tmux` | Tmux config (C-s prefix, vim-tmux-navigator, Catppuccin) |
-| `tmuxinator` | Tmuxinator layout for Odoo development |
 | `yazi` | Yazi file manager with Catppuccin Mocha flavor and git plugin |
 
 ## Prerequisites
@@ -52,7 +48,7 @@ Arch Linux with [Omarchy](https://github.com/basecamp/omarchy) desktop environme
 Required packages:
 
 ```
-stow fish neovim ghostty tmux starship yazi atuin zoxide eza fzf
+stow fish neovim foot herdr starship yazi atuin zoxide eza fzf
 ripgrep fd git-split-diffs lazygit tig docker lazydocker
 ```
 
@@ -63,7 +59,7 @@ git clone <repo-url> ~/src/dev-config
 cd ~/src/dev-config/dotfiles
 
 # Stow all packages
-stow -v --target=$HOME agent-sandbox atuin catppuccin claude discord fish ghostinator ghostty git hypr mise nvim omarchy starship tmux tmuxinator yazi
+stow -v --target=$HOME agent-sandbox atuin catppuccin claude discord fish git hypr mise nvim omarchy starship yazi
 
 # Or stow individually
 stow -v --target=$HOME nvim
@@ -87,6 +83,17 @@ stow -v --target=$HOME nvim
 > one. The `PATH` entry in `~/.config/environment.d/` is only read by systemd at user-session
 > start, so log out/in (or reboot) after stowing it for `PATH` ordering to actually change.
 
+### Secret guard (this repo is public)
+
+```bash
+sudo pacman -S gitleaks
+git config core.hooksPath .githooks   # once per clone
+```
+
+`.githooks/pre-commit` refuses a commit that stages private files (credentials, Claude history,
+SSH keys, `.env`…) or anything gitleaks flags as a secret, and refuses to commit at all while
+gitleaks is missing.
+
 ### Post-install setup
 
 ```bash
@@ -95,8 +102,6 @@ secret-tool store --label="Gemini API Key" unique "gemini-api-key"
 
 # Install Yazi Catppuccin flavor
 ya pkg add yazi-rs/flavors:catppuccin-mocha
-
-# Install Tmux plugins (inside tmux, press prefix + I)
 ```
 
 ## Odoo Development
@@ -119,19 +124,15 @@ git remote set-url --push origin you_should_not_push_on_this_repository
 
 ### Docker infrastructure
 
-The `dockerFiles/` directory contains:
-- `docker-compose.yml` — PostgreSQL + Nginx (global services)
-- `nginx.conf` — Reverse proxy for Odoo containers
-- `images/` — Dockerfiles per Ubuntu distro (jammy, noble)
-
-Odoo containers are created dynamically by the `oe` fish function, not by docker-compose.
+Odoo servers, databases and worktrees are run by Goo
+(`goo-postgres`, `goo-nginx`). `dockerFiles/images/` holds the Dockerfiles per Ubuntu distro
+(jammy, noble) that Goo builds its Odoo images from.
 
 ### Fish functions
 
-- `oe` — Launch Odoo in Docker with various options (enterprise, debug, shell, tests, upgrade)
-- `osh` — Restore Odoo SH database dumps (zip/gzip)
-- `co` — Git checkout helper for Odoo branches
-- `ide` — Launch tmuxinator Odoo layout
+- `herd` — Open the current project as a herdr workspace (editor, git, claude tabs); Goo's editor command
+- `claudio` — Claude Code without the sandbox (labelled `claudio` in herdr, resumed unsandboxed)
+- `osh` — Restore Odoo SH database dumps (zip/gzip) into Goo's Postgres
 
 ## Helper Scripts
 
@@ -143,7 +144,7 @@ This repo tracks **personal overrides** on top of [Omarchy](https://github.com/b
 
 The `hypr` stow package contains:
 
-- `input.lua` — US altgr-intl keyboard, natural scroll, custom repeat rate, Ghostty scroll tuning
+- `input.lua` — US altgr-intl keyboard, natural scroll, custom repeat rate
 - `hyprland.lua` — Omarchy's stock template plus one window rule (XWayland Chrome from the Odoo docker container)
 - `monitors.lua` — machine-specific, must be recreated per device
 - `looknfeel.lua` — niri-like layout: `general.layout = "scrolling"` (Hyprland's native scrolling/column layout, always on)

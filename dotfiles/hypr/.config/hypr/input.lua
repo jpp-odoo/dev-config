@@ -13,6 +13,3 @@ hl.config({
     },
   },
 })
-
--- Scroll nicely in Ghostty (only terminal in use)
-o.window("com.mitchellh.ghostty", { scroll_touchpad = 0.2 })

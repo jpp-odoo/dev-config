@@ -39,19 +39,19 @@ function osh --description "Odoo SH installer"
 
     echo 'Cleaning previous DB'
     rm -rf ~/src/odoo-src/fileStorage/$dbName
-    docker exec -it odoo-db dropdb -U odoo $dbName
+    docker exec -it goo-postgres dropdb -U odoo $dbName
 
     echo 'Create new DB'
-    docker exec -it odoo-db createdb -U odoo $dbName
+    docker exec -it goo-postgres createdb -U odoo $dbName
 
     echo 'Restore DB from dump'
-    docker cp /tmp/$dbName/dump.sql odoo-db:/tmp/dump.sql
-    docker exec -it odoo-db /bin/bash -c "psql -U odoo $dbName </tmp/dump.sql"
-    docker exec -it odoo-db psql -U odoo -d $dbName -c "UPDATE ir_cron SET active = 'f'"
+    docker cp /tmp/$dbName/dump.sql goo-postgres:/tmp/dump.sql
+    docker exec -it goo-postgres /bin/bash -c "psql -U odoo $dbName </tmp/dump.sql"
+    docker exec -it goo-postgres psql -U odoo -d $dbName -c "UPDATE ir_cron SET active = 'f'"
     # login admin whould have id=1 if Odoo <= 11
-    docker exec -it odoo-db psql -U odoo -d $dbName -c "UPDATE res_users SET login ='admin' where id = 2"
-    docker exec -it odoo-db psql -U odoo -d $dbName -c "UPDATE res_users SET password=login"
-    docker exec -it odoo-db psql -U odoo -d $dbName -c "DELETE FROM ir_attachment WHERE name like '/web/content/%assets_%'"
+    docker exec -it goo-postgres psql -U odoo -d $dbName -c "UPDATE res_users SET login ='admin' where id = 2"
+    docker exec -it goo-postgres psql -U odoo -d $dbName -c "UPDATE res_users SET password=login"
+    docker exec -it goo-postgres psql -U odoo -d $dbName -c "DELETE FROM ir_attachment WHERE name like '/web/content/%assets_%'"
 
     if test "$_flag_type" = zip
         echo 'Sync filestore'

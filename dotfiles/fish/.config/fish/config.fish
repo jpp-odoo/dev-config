@@ -1,7 +1,6 @@
 atuin init fish | source
 zoxide init fish | source
 starship init fish | source
-# fzf --fish | source
 
 set -gx SSH_AUTH_SOCK "$XDG_RUNTIME_DIR/gcr/ssh"
 
