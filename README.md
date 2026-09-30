@@ -28,9 +28,10 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 |---------|-------------|
 | `agent-sandbox` | Bubblewrap-sandboxed Claude Code (`~/.local/libexec/agent-sandbox/claude`) + a `PATH` entry (`~/.config/environment.d/`) so it wins over the raw binary for every launcher, not just fish |
 | `atuin` | Shell history sync and search |
+| `claude` | Global Claude Code config (`~/.claude/`): `CLAUDE.md`, `settings.json` (status line, herdr + claudio hooks), status line script, Omarchy theme, and skills: `fresh-review` (context-free subagent review), `odoo-test` (run Odoo tests in Goo's Docker setup) |
 | `catppuccin` | Catppuccin Mocha theme files (eza, fzf, lazygit) |
 | `discord` | Discord desktop settings |
-| `fish` | Fish shell config, custom functions (`co`, `oe`, `osh`, `ide`), completions |
+| `fish` | Fish shell config, custom functions (`co`, `oe`, `osh`, `ide`, `herd`, `claudio`), completions |
 | `ghostinator` | Saved `ghostinator` layouts (tmuxinator-for-Ghostty, `~/src/ghostinator`) |
 | `ghostty` | Ghostty terminal (Catppuccin Mocha, JetBrains Mono, transparency) |
 | `git` | Git config and global gitignore (Odoo workflow aliases, split-diffs pager) |
@@ -62,7 +63,7 @@ git clone <repo-url> ~/src/dev-config
 cd ~/src/dev-config/dotfiles
 
 # Stow all packages
-stow -v --target=$HOME agent-sandbox atuin catppuccin discord fish ghostinator ghostty git hypr mise nvim omarchy starship tmux tmuxinator yazi
+stow -v --target=$HOME agent-sandbox atuin catppuccin claude discord fish ghostinator ghostty git hypr mise nvim omarchy starship tmux tmuxinator yazi
 
 # Or stow individually
 stow -v --target=$HOME nvim

@@ -16,6 +16,18 @@ if [ ! -x "$claude_bin" ]; then
     exit 1
 fi
 
+# Sessions started unsandboxed by claudio come back unsandboxed on resume
+# (herdr restores every claude as `claude --resume <id>`). The list lives
+# outside the sandbox, so a sandboxed claude can't add itself to it.
+for ((i = 1; i < $#; i++)); do
+    if [ "${!i}" = "--resume" ] || [ "${!i}" = "-r" ]; then
+        j=$((i + 1))
+        if grep -qxF -- "${!j}" "$HOME/.local/state/claudio/sessions" 2>/dev/null; then
+            exec fish -c 'claudio $argv' -- "$@"
+        fi
+    fi
+done
+
 claude_dirs=("$HOME/.cache/claude" "$HOME/.cache/claude-cli-nodejs" "$HOME/.claude" "$HOME/.local/state/claude")
 for d in "${claude_dirs[@]}"; do
     mkdir -p "$d"
@@ -39,6 +51,12 @@ while [ "$i" -le "$#" ]; do
     i=$((i + 1))
 done
 
+# Start in the current directory when it is mounted, else in the first allowed dir
+chdir="${allow_dirs[0]}"
+for d in "${allow_dirs[@]}"; do
+    case "$PWD/" in "$d"/*) chdir="$PWD" ;; esac
+done
+
 bwrap_args=(
     --bind "$HOME/.local/bin/claude" "$HOME/.local/bin/claude"
     --bind "$HOME/.local/share/claude" "$HOME/.local/share/claude"
@@ -52,14 +70,21 @@ bwrap_args=(
     --ro-bind /etc/passwd /etc/passwd
     --bind /var/run/docker.sock /var/run/docker.sock
     --dev /dev --proc /proc --tmpfs /tmp
-    --chdir "${allow_dirs[0]}"
+    --chdir "$chdir"
     --unshare-pid --unshare-ipc --unshare-uts --unshare-cgroup
-    --die-with-parent --new-session --hostname claude-sandbox
+    --die-with-parent --hostname claude-sandbox --unsetenv CLAUDIO
 )
+# --new-session only guards against TIOCSTI terminal injection, but it moves
+# claude out of the terminal's foreground group, so herdr can't see it. Skip it
+# when the kernel already blocks TIOCSTI (the default since Linux 6.2).
+[ "$(cat /proc/sys/dev/tty/legacy_tiocsti 2>/dev/null)" = 0 ] || bwrap_args+=(--new-session)
 
 for d in "${claude_dirs[@]}" "${claude_files[@]}"; do
     bwrap_args+=(--bind "$d" "$d")
 done
+# herdr's socket, so the herdr hooks can report this claude to the agent list.
+# Trade-off: it also lets the sandbox drive herdr, i.e. type into unsandboxed panes.
+[ -S "${HERDR_SOCKET_PATH:-}" ] && bwrap_args+=(--bind "$HERDR_SOCKET_PATH" "$HERDR_SOCKET_PATH")
 for d in "${allow_dirs[@]}"; do
     bwrap_args+=(--bind "$d" "$d")
     claude_args+=(--add-dir "$d")
