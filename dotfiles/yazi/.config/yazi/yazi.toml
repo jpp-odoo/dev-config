@@ -5,14 +5,12 @@ show_hidden = true
 
 [[plugin.prepend_fetchers]]
 id    = "git"
-name  = "*"
+url   = "*"
 run   = "git"
 group = "mime"
-mime  = "*/*"
 
 [[plugin.prepend_fetchers]]
 id    = "git"
-name  = "*/"
+url   = "*/"
 run   = "git"
 group = "mime"
-mime  = "inode/directory"

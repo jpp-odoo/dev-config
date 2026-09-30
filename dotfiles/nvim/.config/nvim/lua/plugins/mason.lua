@@ -4,6 +4,7 @@ return {
         ensure_installed = {
             "debugpy",
             "eslint_d",
+            "prettier",
         },
     },
 }

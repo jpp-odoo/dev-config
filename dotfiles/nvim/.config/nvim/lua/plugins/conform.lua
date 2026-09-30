@@ -3,13 +3,16 @@ return {
     opts = {
         formatters = {
             prettier_odoo = {
-                command = require("conform.util").from_node_modules("prettier"),
+                command = "prettier",
                 args = { "--tab-width", "4", "--semi", "--no-single-quote", "--print-width", "100", "--stdin-filepath", "$FILENAME" },
                 stdin = true,
             },
         },
         formatters_by_ft = {
             javascript = { "eslint_d" },
+            typescript = { "eslint_d" },
+            javascriptreact = { "eslint_d" },
+            typescriptreact = { "eslint_d" },
             python = {
                 -- To fix auto-fixable lint errors.
                 "ruff_fix",

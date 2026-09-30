@@ -11,7 +11,7 @@
     "db_port": "5432",
     "filestore": "/home/jpp/src/odoo-src/fileStorage/",
     "log_level": "",
-    "editor": "bash -c 'hyprctl eval \"hl.dispatch(hl.dsp.focus({ workspace = \\\"empty\\\" }))\" >/dev/null; ghostty +new-window --working-directory=\"$(dirname \"$1\")\" --command=\"fish -c ide\"' _",
+    "editor": "bash -c 'hyprctl eval \"hl.dispatch(hl.dsp.focus({ workspace = \\\"empty\\\" }))\" >/dev/null; foot --working-directory=\"$(dirname \"$1\")\" fish -c ide' _",
     "main_repo_id": "odoo",
     "launch_mode": "docker",
     "docker_network": "goo_odoo",

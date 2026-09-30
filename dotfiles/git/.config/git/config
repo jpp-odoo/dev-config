@@ -6,7 +6,7 @@
 [alias]
 	co = checkout
 	fa = fetch --all --prune
-	r = !fish -c 'set base (git rev-parse --abbrev-ref HEAD | string match -r \"(?:saas-)?[^-]*\") && echo rebase origin/$base && git rebase --autostash origin/$base'
+	r = !fish -c 'set base (git rev-parse --abbrev-ref HEAD | string match -r \"^(?:saas-\\d+\\.\\d+|\\d+\\.\\d+|master)\") && echo rebase origin/$base && git rebase --autostash origin/$base'
 	br = branch -vv
 	p = !CURRENT=$(git rev-parse --abbrev-ref HEAD) && git push --set-upstream dev $CURRENT
 	pf = !CURRENT=$(git rev-parse --abbrev-ref HEAD) && git push --set-upstream --force-with-lease dev $CURRENT
@@ -36,5 +36,5 @@
 
 [split-diffs]
 	theme-name = github-dark-dim
-[url "ssh://git@ssh.github.com:443/"]
-	insteadOf = git@github.com:
+; [url "ssh://git@ssh.github.com:443/"]
+; 	insteadOf = git@github.com:

@@ -40,6 +40,11 @@ end
 ---@param remote_url string
 ---@return string
 local function remote_to_https(remote_url)
+    -- ssh://git@ssh.github.com:443/owner/repo.git (GitHub's SSH-over-HTTPS-port form)
+    local host, path = remote_url:match("^ssh://git@([^:/]+):?%d*/(.+)$")
+    if host and path then
+        return "https://" .. host:gsub("^ssh%.", "") .. "/" .. path:gsub("%.git$", "")
+    end
     return remote_url
         :gsub("git@([^:]+):(.+)%.git$", "https://%1/%2")
         :gsub("git@([^:]+):(.+)$", "https://%1/%2")

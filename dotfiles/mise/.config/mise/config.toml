@@ -3,3 +3,5 @@ codex = "latest"
 gemini = { version = "latest", allow_builds = ["@github/keytar", "node-pty"] }
 gh = "latest"
 node = "25.2.1"
+"npm:playwright" = "latest"
+ruff = "latest"
