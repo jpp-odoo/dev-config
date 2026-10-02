@@ -9,7 +9,7 @@ The point is an unbiased review: the reviewer must not inherit what this session
 
 1. Find the target. By default it's the uncommitted diff (`git diff` plus untracked files) of the repo or worktree being worked on. If there is none, use the unpushed commits (`git log @{u}..`, or the branch's own commits). If the user names a commit, branch, PR or path, use that. When it's ambiguous (several worktrees with changes), pick the one this conversation is about.
 
-2. Spawn a single **new** `general-purpose` Agent. Never use `fork`, which would inherit the context. Its prompt must be self-contained and say:
+2. Spawn a single **new** Agent: `odoo-reviewer` for Odoo code (it preloads the house rules), `general-purpose` for anything else. Never use `fork`, which would inherit the context. Its prompt must be self-contained and say:
    - the absolute repo path and the exact command that shows the change (e.g. `git -C <path> diff`);
    - the intent of the change in two or three neutral sentences: what it should do, not how good it is, and without the conclusions or doubts from this conversation;
    - **not** to read or rely on any memory (`~/.claude/projects/*/memory/`, `MEMORY.md`) or earlier-session notes, and to judge the code only against the surrounding source;

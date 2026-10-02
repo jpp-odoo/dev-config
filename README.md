@@ -28,7 +28,7 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 |---------|-------------|
 | `agent-sandbox` | Bubblewrap-sandboxed Claude Code (`~/.local/libexec/agent-sandbox/claude`) + a `PATH` entry (`~/.config/environment.d/`) so it wins over the raw binary for every launcher, not just fish |
 | `atuin` | Shell history sync and search |
-| `claude` | Global Claude Code config (`~/.claude/`): `CLAUDE.md`, `settings.json` (status line, herdr + claudio hooks), status line script, Omarchy theme, and skills: `fresh-review` (context-free subagent review), `odoo-test` (run Odoo tests in Goo's Docker setup) |
+| `claude` | Global Claude Code config (`~/.claude/`): `CLAUDE.md`, agents (`odoo-explorer`, `odoo-tester`, `odoo-reviewer`), `settings.json` (status line, herdr + claudio hooks), status line script, Omarchy theme, and skills: `fresh-review` (context-free subagent review), `odoo-test` (run Odoo tests in Goo's Docker setup) |
 | `catppuccin` | Catppuccin Mocha theme files (eza, fzf, lazygit) |
 | `discord` | Discord desktop settings |
 | `fish` | Fish shell config, custom functions (`herd`, `claudio`, `osh`), completions |
@@ -37,6 +37,7 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 | `hypr` | Hyprland WM overrides (input, monitors, one window rule) |
 | `mise` | Global mise tool versions (`~/.config/mise/config.toml`) — codex, gemini, gh, node |
 | `nvim` | NeoVim with LazyVim (LSP, DAP Python, Claude Code, Diffview, git permalink) |
+| `odoo-src` | `~/src/odoo-src/CLAUDE.md`: rules for every Odoo workspace (delegate exploration, tests and review to the `odoo-*` agents; write code in the main session) |
 | `omarchy` | Omarchy shell overrides (status bar layout via `shell.json`) |
 | `starship` | Starship prompt with Catppuccin Mocha palette |
 | `yazi` | Yazi file manager with Catppuccin Mocha flavor and git plugin |
@@ -59,7 +60,7 @@ git clone <repo-url> ~/src/dev-config
 cd ~/src/dev-config/dotfiles
 
 # Stow all packages
-stow -v --target=$HOME agent-sandbox atuin catppuccin claude discord fish git hypr mise nvim omarchy starship yazi
+stow -v --target=$HOME agent-sandbox atuin catppuccin claude discord fish git hypr mise nvim odoo-src omarchy starship yazi
 
 # Or stow individually
 stow -v --target=$HOME nvim
