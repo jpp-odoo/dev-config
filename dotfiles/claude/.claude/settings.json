@@ -1,4 +1,23 @@
 {
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/home/jpp/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDIO\" = 1 ] || exit 0; mkdir -p ~/.local/state/claudio && jq -r .session_id >> ~/.local/state/claudio/sessions",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "bash /home/jpp/.claude/statusline-command.sh"
@@ -9,6 +28,5 @@
   "effortLevel": "high",
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
-  "theme": "auto",
-  "hooks": {"SessionStart":[{"matcher":"*","hooks":[{"type":"command","command":"bash '/home/jpp/.claude/hooks/herdr-agent-state.sh' session","timeout":10},{"type":"command","command":"[ \"$CLAUDIO\" = 1 ] || exit 0; mkdir -p ~/.local/state/claudio && jq -r .session_id >> ~/.local/state/claudio/sessions","timeout":10}]}]}
+  "theme": "auto"
 }
