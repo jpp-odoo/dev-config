@@ -23,6 +23,8 @@ matters before relying on it.
 
 Write the whole message yourself, output only the final message (no options). Plain, direct
 engineering vocabulary: no "plumbed", "delves", "holistic", "robustly", "showcase" and the like.
+The message is often the only thing a reader sees of the change, so be as long as the why needs,
+and cut only repetition and diff inventory.
 
 **Describe the behavior change, not the code change.** The diff already shows what was edited.
 Say what the user or developer saw go wrong (or the limitation), and what happens differently
@@ -32,6 +34,9 @@ list the files, functions, getters, events or counters added or removed. `[REF]`
 no behavior change: describe the structural change and why it is better. Self-check: a paragraph
 that stays true after renaming every identifier is behavior; one made only of identifiers is the
 diff, cut it.
+
+**Give the real why.** Explain why the change is done, and the technical choice after it. "The PO
+team asked for it" is not a why. If the real reason is unknown, ask instead of inventing one.
 
 **Be concrete, not abstract.** Name the real cases, components and dialogs affected, before and
 after ("forms shown in a dialog (`FormViewDialog`, `x2many` dialogs) were protected, the sale
@@ -44,8 +49,8 @@ closing paragraph what an earlier one already says.
 
 Structure:
 
-- Title `[TAG] module: short description`, phrased as behavior ("prevent crash on...", "avoid an
-  extra request..."). Tags: `[FIX]` `[IMP]` `[REF]` `[ADD]` `[REM]` `[PERF]` `[MOV]` `[REV]`
+- Title `[TAG] module: short description`, ideally under 50 characters. It must complete "If
+  applied, this commit will <title>" ("prevent crash on...", "avoid an extra request..."). Tags: `[FIX]` `[IMP]` `[REF]` `[ADD]` `[REM]` `[PERF]` `[MOV]` `[REV]`
   `[I18N]`. Lowercase module, no trailing period.
 - Context paragraph: "Before this commit, ..." in the **past** tense (or "Currently, ..." in the
   present). Never mix the two.
