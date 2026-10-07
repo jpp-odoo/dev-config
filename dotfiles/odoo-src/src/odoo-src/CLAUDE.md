@@ -52,12 +52,14 @@ Structure:
 
 - Title `[TAG] module: short description`, ideally under 50 characters. It must complete "If
   applied, this commit will <title>" ("prevent crash on...", "avoid an extra request..."). Tags: `[FIX]` `[IMP]` `[REF]` `[ADD]` `[REM]` `[PERF]` `[MOV]` `[REV]`
-  `[I18N]`. Lowercase module, no trailing period.
+  `[I18N]` `[CLN]` (cleanup) `[LINT]`. Lowercase technical module name, no trailing period. If
+  several modules change, list them or write `various`, but prefer one commit per module. Never a
+  bare "bugfix" or "improvements" as description.
 - Context paragraph: "Before this commit, ..." in the **past** tense (or "Currently, ..." in the
   present). Never mix the two.
 - Fix paragraph: "This commit fixes/adds/removes ..." or "With this commit, ...". Not "Now ...".
 - Optional short paragraph for testing, bundling or an architectural note.
-- Footer: `task-id N` or `opw-N`, and `Related: odoo/enterprise#N` for the sibling-repo half. If
+- Footer: `task-id N` or `opw-N`, `Fixes #N` / `Closes #N` for a GitHub issue / PR, and `Related: odoo/enterprise#N` for the sibling-repo half. If
   the number is unknown, ask for it after the message instead of inventing one.
 - No markdown headers, continuous paragraphs, body wrapped at 72 characters.
 - Backticks on every identifier: file path, variable, function, event name, class, directive,
