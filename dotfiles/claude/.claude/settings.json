@@ -29,5 +29,5 @@
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
   "theme": "auto",
-  "model": "sonnet"
+  "model": "opus"
 }

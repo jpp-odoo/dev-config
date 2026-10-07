@@ -2,7 +2,7 @@
 name: odoo-reviewer
 description: Fresh, context-free review of an Odoo change (JS/Owl, Python, XML) against the house rules. Read-only. Used by the fresh-review skill, and before concluding a non-trivial change.
 tools: Read, Grep, Glob, Bash
-model: sonnet
+model: opus
 skills:
   - odoo-review
 ---
