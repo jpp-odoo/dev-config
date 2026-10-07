@@ -85,6 +85,9 @@ done
 # herdr's socket, so the herdr hooks can report this claude to the agent list.
 # Trade-off: it also lets the sandbox drive herdr, i.e. type into unsandboxed panes.
 [ -S "${HERDR_SOCKET_PATH:-}" ] && bwrap_args+=(--bind "$HERDR_SOCKET_PATH" "$HERDR_SOCKET_PATH")
+# mise's node (already on PATH), read-only, so Odoo's pre-commit hook can run npm.
+mise_node="$HOME/.local/share/mise/installs/node"
+[ -d "$mise_node" ] && bwrap_args+=(--ro-bind "$mise_node" "$mise_node")
 for d in "${allow_dirs[@]}"; do
     bwrap_args+=(--bind "$d" "$d")
     claude_args+=(--add-dir "$d")
