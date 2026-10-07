@@ -27,7 +27,7 @@ RUN PLATFORM=$(dpkg --print-architecture) && \
     python3-dateutil python3-dbfread python3-decorator python3-dev python3-docopt python3-docutils python3-feedparser \
     python3-fonttools python3-freezegun python3-geoip2 python3-gevent python3-html2text python3-jinja2 python3-jwt \
     python3-libsass python3-lxml python3-lxml-html-clean python3-mako python3-markdown python3-matplotlib python3-mock \
-    python3-num2words python3-ofxparse python3-openid python3-openpyxl python3-openssl python3-passlib \
+    python3-num2words python3-ofxparse python3-openid python3-openpyxl python3-openssl python3-paramiko python3-passlib \
     python3-pdfminer python3-phonenumbers python3-pil python3-polib python3-psutil python3-psycogreen python3-psycopg2 \
     python3-pydot python3-pyldap python3-pyparsing python3-pypdf2 python3-qrcode python3-renderpm python3-reportlab \
     python3-requests python3-rjsmin python3-setproctitle python3-simplejson python3-slugify python3-stdnum \
