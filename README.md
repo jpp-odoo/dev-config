@@ -28,7 +28,7 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 |---------|-------------|
 | `agent-sandbox` | Bubblewrap-sandboxed Claude Code (`~/.local/libexec/agent-sandbox/claude`) + a `PATH` entry (`~/.config/environment.d/`) so it wins over the raw binary for every launcher, not just fish |
 | `atuin` | Shell history sync and search |
-| `claude` | Global Claude Code config (`~/.claude/`): `CLAUDE.md`, agents (`odoo-explorer`, `odoo-tester`, `odoo-reviewer`), `settings.json` (status line, herdr + claudio hooks), status line script, Omarchy theme, and skills: `fresh-review` (context-free subagent review), `odoo-test` (run Odoo tests in Goo's Docker setup) |
+| `claude` | Global Claude Code config (`~/.claude/`): `CLAUDE.md`, agents (`odoo-explorer`, `odoo-tester`, `odoo-reviewer`), `settings.json` (status line, herdr + claudio hooks), status line script, `tools/odoo-shot.mjs` (Odoo screenshots), Omarchy theme, and skills: `fresh-review` (context-free subagent review), `odoo-test` (run Odoo tests in Goo's Docker setup) |
 | `catppuccin` | Catppuccin Mocha theme files (eza, fzf, lazygit) |
 | `discord` | Discord desktop settings |
 | `fish` | Fish shell config, custom functions (`herd`, `claudio`, `osh`), completions |
@@ -52,6 +52,8 @@ Required packages:
 stow fish neovim foot herdr starship yazi atuin zoxide eza fzf
 ripgrep fd git-split-diffs lazygit tig docker lazydocker
 ```
+
+After stowing `claude`, run `herdr integration install claude` once: it writes `~/.claude/hooks/herdr-agent-state.sh`, which the `settings.json` hook calls (herdr-managed, not tracked here).
 
 ## Installation
 
