@@ -1,7 +1,8 @@
 # Odoo work (every workspace under ~/src/odoo-src)
 
 A workspace is `~/src/odoo-src/<ws>/` with `odoo/` and `enterprise/` checkouts. Goo runs the
-servers, databases and worktrees: never start, stop or exec into its containers.
+servers, databases and worktrees in Docker containers; use them freely to run Odoo and its tests
+(`~/.claude/tools/odoo-test.sh`, see the `odoo-test` skill).
 
 ## Delegate the reading, keep the writing
 

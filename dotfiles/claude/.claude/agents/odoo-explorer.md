@@ -1,6 +1,6 @@
 ---
 name: odoo-explorer
-description: Read-only search of Odoo source (odoo, enterprise, owl) for questions that would mean reading many files - where something is defined, who calls it, how a pattern is done elsewhere, git history and blame. Returns file:line pointers, not file dumps. Never modifies anything.
+description: Read-only search of Odoo source (odoo, enterprise) for questions that would mean reading many files - where something is defined, who calls it, how a pattern is done elsewhere, git history and blame. Returns file:line pointers, not file dumps. Never modifies anything.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
