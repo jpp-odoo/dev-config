@@ -5,7 +5,9 @@ After=graphical-session.target
 [Service]
 Type=simple
 WorkingDirectory=%h/src/goo
-ExecStart=/usr/bin/python3 %h/src/goo/goo.py
+# The systemd user PATH ends up without environment.d's agent-sandbox entry, so set it here:
+# Goo's bare `claude` must be the sandbox wrapper.
+ExecStart=/usr/bin/env PATH=%h/.local/libexec/agent-sandbox:${PATH} /usr/bin/python3 %h/src/goo/goo.py
 Restart=on-failure
 RestartSec=2
 

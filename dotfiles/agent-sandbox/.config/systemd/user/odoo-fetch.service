@@ -1,0 +1,6 @@
+[Unit]
+Description=Fetch origin in the main Odoo checkouts
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/libexec/agent-sandbox/odoo-fetch

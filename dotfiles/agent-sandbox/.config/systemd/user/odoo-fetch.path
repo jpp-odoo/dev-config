@@ -1,0 +1,9 @@
+[Unit]
+Description=Fetch origin in the main Odoo checkouts when the Claude sandbox asks
+
+[Path]
+PathModified=%h/.local/state/odoo-fetch/request
+MakeDirectory=true
+
+[Install]
+WantedBy=default.target

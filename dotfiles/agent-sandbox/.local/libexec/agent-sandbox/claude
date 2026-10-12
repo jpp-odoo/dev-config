@@ -88,9 +88,20 @@ done
 # mise's node (already on PATH), read-only, so Odoo's pre-commit hook can run npm.
 mise_node="$HOME/.local/share/mise/installs/node"
 [ -d "$mise_node" ] && bwrap_args+=(--ro-bind "$mise_node" "$mise_node")
+# No SSH in here, so `odoo-fetch` asks the host to fetch the Odoo repos (odoo-fetch.path).
+odoo_fetch_state="$HOME/.local/state/odoo-fetch"
+mkdir -p "$odoo_fetch_state"
+bwrap_args+=(--bind "$odoo_fetch_state" "$odoo_fetch_state"
+    --ro-bind "$HOME/.local/libexec/agent-sandbox/odoo-fetch" "$HOME/.local/bin/odoo-fetch")
 for d in "${allow_dirs[@]}"; do
     bwrap_args+=(--bind "$d" "$d")
     claude_args+=(--add-dir "$d")
+done
+# Read-only after the ~/src bind, as their code runs on the host: dev-config's dotfiles are
+# symlinked into ~ (this wrapper, odoo-fetch, systemd units, fish, git, hypr, ~/.claude/settings.json
+# hooks), and goo runs as a host service.
+for d in "$HOME/src/dev-config" "$HOME/src/goo"; do
+    [ -d "$d" ] && bwrap_args+=(--ro-bind "$d" "$d")
 done
 
 forbidden=("$HOME/.ssh" "$HOME/.gnupg" "$HOME/.config/gh" \

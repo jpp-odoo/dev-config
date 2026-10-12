@@ -4,6 +4,10 @@ A workspace is `~/src/odoo-src/<ws>/` with `odoo/` and `enterprise/` checkouts. 
 servers, databases and worktrees in Docker containers; use them freely to run Odoo and its tests
 (`~/.claude/tools/odoo-test.sh`, see the `odoo-test` skill).
 
+`git fetch` fails in the sandbox (no SSH). Run `odoo-fetch` instead: the host fetches origin for
+odoo, enterprise, documentation and upgrade, which updates `origin/*` in every workspace, then
+rebase as usual. It takes about a minute. Fetching from `dev` is not possible.
+
 ## Delegate the reading, keep the writing
 
 Most of the cost of a session is re-reading its own context, so keep big reads and logs out of it:

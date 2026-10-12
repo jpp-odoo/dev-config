@@ -1,0 +1,9 @@
+[Unit]
+Description=Fetch origin in the main Odoo checkouts twice a day
+
+[Timer]
+OnCalendar=*-*-* 08,13:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -26,14 +26,14 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 
 | Package | Description |
 |---------|-------------|
-| `agent-sandbox` | Bubblewrap-sandboxed Claude Code (`~/.local/libexec/agent-sandbox/claude`) + a `PATH` entry (`~/.config/environment.d/`) so it wins over the raw binary for every launcher, not just fish |
+| `agent-sandbox` | Bubblewrap-sandboxed Claude Code (`~/.local/libexec/agent-sandbox/claude`) + a `PATH` entry (`~/.config/environment.d/`) so it wins over the raw binary for every launcher, not just fish. The sandbox gets `~/src` read-write except `~/src/dev-config` and `~/src/goo`, read-only, since their code runs on the host: edit them from an unsandboxed session (`claudio`). `odoo-fetch` fetches origin in `~/src/odoo-src/master/{odoo,enterprise,documentation,upgrade}` (shared by every worktree): `odoo-fetch.timer` runs it at 08:00 and 13:00, and inside the sandbox (no SSH) the same command asks the host to run it through `odoo-fetch.path`, so the sandbox can fetch but has no key to push with |
 | `atuin` | Shell history sync and search |
 | `claude` | Global Claude Code config (`~/.claude/`): `CLAUDE.md`, agents (`odoo-explorer`, `odoo-tester`, `odoo-reviewer`), `settings.json` (status line, herdr + claudio hooks), status line script, `tools/odoo-shot.mjs` (Odoo screenshots), Omarchy theme, and skills: `fresh-review` (context-free subagent review), `odoo-test` (run Odoo tests in Goo's Docker setup, via `tools/odoo-test.sh`) |
 | `catppuccin` | Catppuccin Mocha theme files (eza, fzf, lazygit) |
 | `discord` | Discord desktop settings |
 | `fish` | Fish shell config, custom functions (`herd`, `claudio`, `osh`), completions |
 | `git` | Git config and global gitignore (Odoo workflow aliases, split-diffs pager) |
-| `goo` | goo's live config.json (repos, workspaces, settings) — grows over time, commit to snapshot |
+| `goo` | goo's live config.json (repos, workspaces, settings) — grows over time, commit to snapshot — and `goo.service`, which puts `agent-sandbox` first on Goo's `PATH` so the Claude it starts is sandboxed |
 | `hypr` | Hyprland WM overrides (input, monitors, one window rule) |
 | `mise` | Global mise tool versions (`~/.config/mise/config.toml`) — codex, gemini, gh, node |
 | `nvim` | NeoVim with LazyVim (LSP, DAP Python, Claude Code, Diffview, git permalink) |
@@ -105,6 +105,9 @@ secret-tool store --label="Gemini API Key" unique "gemini-api-key"
 
 # Install Yazi Catppuccin flavor
 ya pkg add yazi-rs/flavors:catppuccin-mocha
+
+# Fetch the Odoo repos twice a day, and on demand from the Claude sandbox
+systemctl --user enable --now odoo-fetch.timer odoo-fetch.path
 ```
 
 ## Odoo Development

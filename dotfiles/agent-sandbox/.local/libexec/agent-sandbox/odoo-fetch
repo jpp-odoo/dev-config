@@ -1,0 +1,30 @@
+#!/bin/bash
+# Fetch origin in the main Odoo checkouts (~/src/odoo-src/master/*), whose refs every
+# worktree shares. On the host it fetches (odoo-fetch.timer, twice a day). Inside the
+# Claude sandbox, which has no SSH, it asks the host to fetch (odoo-fetch.path) and
+# waits for the result.
+
+state="$HOME/.local/state/odoo-fetch"
+
+if [ "$(cat /proc/sys/kernel/hostname)" = claude-sandbox ]; then
+    rm -f "$state/status"
+    touch "$state/request"
+    for _ in $(seq 600); do
+        [ -e "$state/status" ] && break
+        sleep 1
+    done
+    cat "$state/log" 2>/dev/null
+    [ -e "$state/status" ] || { echo "odoo-fetch: no answer from the host after 10 min" >&2; exit 1; }
+    exit "$(cat "$state/status")"
+fi
+
+mkdir -p "$state"
+status=0
+for repo in "$HOME"/src/odoo-src/master/{odoo,enterprise,documentation,upgrade}; do
+    [ -d "$repo/.git" ] || continue
+    echo "== $repo"
+    git -C "$repo" fetch origin || status=1
+done >"$state/log" 2>&1
+echo "$status" >"$state/status"
+cat "$state/log"
+exit "$status"
