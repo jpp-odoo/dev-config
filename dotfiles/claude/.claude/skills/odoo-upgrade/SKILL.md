@@ -26,4 +26,6 @@ Points that are easy to get wrong:
   matching odoo-dev/enterprise-dev branch; PRs target master only.
 - Scripts use SQL and `odoo.upgrade.util` rather than the ORM, are reentrant, and tolerate
   dirty data.
-- Run the pre-commit hook before committing.
+- Run the pre-commit hook before committing: `uvx pre-commit run --files <changed files>` from the
+  repo root (it applies ruff fixes, so review `git diff` afterwards). For a quick lint only:
+  `ruff check --no-fix <files>` (its `ruff.toml` sets `fix = true`).

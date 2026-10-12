@@ -45,6 +45,31 @@ native CSS syntax (custom properties, native nesting, `color-mix()`, etc.) over 
 writing or editing styles, and write new style files as `.css`. Avoid adding new SCSS
 mixins/variables/functions; fall back to SCSS only when CSS cannot express it, and say so.
 
+## Python lint: ruff
+
+After editing Python, run ruff on the touched files with the runbot config
+(`ruff check --config <ws>/odoo/ruff.toml <files>`, also for enterprise, which has none of its own).
+That config is the rule set Odoo enforces (it ignores some rules and notes advisory ones): never
+add `--select`/`--ignore` or other rules. Fix only the errors on lines you changed; the files
+already carry unrelated ones. Do not run `--fix` on whole files.
+The `upgrade` repo is the exception: it has its own `ruff.toml`, so run `ruff check --no-fix <files>`
+from `<ws>/upgrade/` (its config sets `fix = true`).
+
+## JS lint: eslint
+
+After editing JS, run eslint on the touched files, from the `odoo/` or `enterprise/` checkout, with
+the config that `addons/web/tooling/_eslintrc.json` defines (the `.eslintrc.json` in a checkout is only a
+copy made by `enable.sh`, and may be missing or stale in a worktree). A worktree has no
+`node_modules`, so borrow the ones of `~/src/odoo-src/master/odoo`:
+
+```
+ESL=~/src/odoo-src/master/odoo
+$ESL/node_modules/.bin/eslint --no-eslintrc -c <ws>/odoo/addons/web/tooling/_eslintrc.json \
+  --resolve-plugins-relative-to $ESL <files>
+```
+
+Same rules as for ruff: fix only the errors on lines you changed, no `--fix` on whole files.
+
 ## Commit messages
 
 The `odoo-git` skill gives the format: header, tags, scopes (`*` for many modules), trailers, and
