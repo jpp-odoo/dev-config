@@ -63,6 +63,7 @@ bwrap_args=(
     --ro-bind /run/systemd/resolve /run/systemd/resolve
     --ro-bind /etc/hosts /etc/hosts
     --ro-bind /etc/ssl /etc/ssl
+    --ro-bind /etc/ca-certificates /etc/ca-certificates
     --symlink ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
     --ro-bind /usr /usr
     --symlink usr/bin /bin --symlink usr/sbin /sbin
@@ -88,6 +89,17 @@ done
 # mise's node (already on PATH), read-only, so Odoo's pre-commit hook can run npm.
 mise_node="$HOME/.local/share/mise/installs/node"
 [ -d "$mise_node" ] && bwrap_args+=(--ro-bind "$mise_node" "$mise_node")
+# mise's ruff, read-only: the lint rules in odoo-src/CLAUDE.md.
+mise_ruff="$HOME/.local/share/mise/installs/ruff"
+[ -d "$mise_ruff" ] && bwrap_args+=(--ro-bind "$mise_ruff" "$mise_ruff")
+# uv(x) and its caches, so the upgrade repo's pre-commit runs (`uvx pre-commit run`).
+for f in "$HOME/.local/bin/uv" "$HOME/.local/bin/uvx"; do
+    [ -x "$f" ] && bwrap_args+=(--ro-bind "$f" "$f")
+done
+for d in "$HOME/.cache/uv" "$HOME/.cache/pre-commit" "$HOME/.local/share/uv"; do
+    mkdir -p "$d"
+    bwrap_args+=(--bind "$d" "$d")
+done
 # No SSH in here, so `odoo-fetch` asks the host to fetch the Odoo repos (odoo-fetch.path).
 odoo_fetch_state="$HOME/.local/state/odoo-fetch"
 mkdir -p "$odoo_fetch_state"
