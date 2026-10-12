@@ -23,43 +23,41 @@ function osh --description "Odoo SH installer"
         return 1
     end
 
-    set db_prefix oe_support_
     set --query _flag_d; or set --local _flag_d bf
-    set dbName "$db_prefix$_flag_d"
 
     if test "$_flag_type" = zip
         echo 'Unzip File'
-        unzip -qq $_flag_f -d /tmp/$dbName
+        unzip -qq $_flag_f -d /tmp/$_flag_d
     end
     if test "$_flag_type" = gz
         echo 'Gzip File'
-        mkdir /tmp/$dbName
-        gzip -dfc $_flag_f >/tmp/$dbName/dump.sql
+        mkdir /tmp/$_flag_d
+        gzip -dfc $_flag_f >/tmp/$_flag_d/dump.sql
     end
 
     echo 'Cleaning previous DB'
-    rm -rf ~/src/odoo-src/fileStorage/$dbName
-    docker exec -it goo-postgres dropdb -U odoo $dbName
+    rm -rf ~/src/odoo-src/fileStorage/$_flag_d
+    docker exec -it goo-postgres dropdb -U odoo $_flag_d
 
     echo 'Create new DB'
-    docker exec -it goo-postgres createdb -U odoo $dbName
+    docker exec -it goo-postgres createdb -U odoo $_flag_d
 
     echo 'Restore DB from dump'
-    docker cp /tmp/$dbName/dump.sql goo-postgres:/tmp/dump.sql
-    docker exec -it goo-postgres /bin/bash -c "psql -U odoo $dbName </tmp/dump.sql"
-    docker exec -it goo-postgres psql -U odoo -d $dbName -c "UPDATE ir_cron SET active = 'f'"
+    docker cp /tmp/$_flag_d/dump.sql goo-postgres:/tmp/dump.sql
+    docker exec -it goo-postgres /bin/bash -c "psql -U odoo $_flag_d </tmp/dump.sql"
+    docker exec -it goo-postgres psql -U odoo -d $_flag_d -c "UPDATE ir_cron SET active = 'f'"
     # login admin whould have id=1 if Odoo <= 11
-    docker exec -it goo-postgres psql -U odoo -d $dbName -c "UPDATE res_users SET login ='admin' where id = 2"
-    docker exec -it goo-postgres psql -U odoo -d $dbName -c "UPDATE res_users SET password=login"
-    docker exec -it goo-postgres psql -U odoo -d $dbName -c "DELETE FROM ir_attachment WHERE name like '/web/content/%assets_%'"
+    docker exec -it goo-postgres psql -U odoo -d $_flag_d -c "UPDATE res_users SET login ='admin' where id = 2"
+    docker exec -it goo-postgres psql -U odoo -d $_flag_d -c "UPDATE res_users SET password=login"
+    docker exec -it goo-postgres psql -U odoo -d $_flag_d -c "DELETE FROM ir_attachment WHERE name like '/web/content/%assets_%'"
 
     if test "$_flag_type" = zip
         echo 'Sync filestore'
-        rsync -a /tmp/$dbName/filestore/ ~/src/odoo-src/fileStorage/$dbName
+        rsync -a /tmp/$_flag_d/filestore/ ~/src/odoo-src/fileStorage/$_flag_d
     end
 
     echo 'Clean tmp files'
-    rm -rf /tmp/$dbName/
+    rm -rf /tmp/$_flag_d/
 
     echo Done
 
