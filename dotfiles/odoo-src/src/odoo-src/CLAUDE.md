@@ -20,7 +20,32 @@ Brief each agent with the absolute workspace path, the goal, the files involved 
 expected answer. Run independent agents in parallel. Their results are leads: verify what
 matters before relying on it.
 
+## Customizations: last resort
+
+A customization (custom template, JS patch, server-side trick, new framework option) is expensive to
+maintain. Add one only when it cannot be done in a standard way (arch attributes, existing options,
+framework behavior) AND it is really necessary or important, or when I literally asked for it. A
+cosmetic difference, such as the order of buttons, is not worth one: keep what the framework decides
+and report the difference instead.
+
+## Code comments: only for tricky logic
+
+Do not add comments to the code unless the part or the logic is really tricky (a browser
+limit, a non-obvious ordering, a workaround). Names and structure explain the rest: no
+comment per block, no comment restating the next line, no docblock repeating the signature.
+
+## Styles: CSS, not SCSS
+
+SCSS is going to disappear from Odoo (runbot warns "avoid using scss" on new `.scss` files). Prefer
+native CSS syntax (custom properties, native nesting, `color-mix()`, etc.) over SCSS features when
+writing or editing styles, and write new style files as `.css`. Avoid adding new SCSS
+mixins/variables/functions; fall back to SCSS only when CSS cannot express it, and say so.
+
 ## Commit messages
+
+The `odoo-git` skill gives the format: header, tags, scopes (`*` for many modules), trailers, and
+what the bots add (`closes`, `Part-of`, `Related`: never write them). The rules below are my
+style on top of it.
 
 Write the whole message yourself, output only the final message (no options). Plain, direct
 engineering vocabulary: no "plumbed", "delves", "holistic", "robustly", "showcase" and the like.
@@ -36,8 +61,8 @@ no behavior change: describe the structural change and why it is better. Self-ch
 that stays true after renaming every identifier is behavior; one made only of identifiers is the
 diff, cut it.
 
-**Give the real why.** Explain why the change is done, and the technical choice after it. "The PO
-team asked for it" is not a why. If the real reason is unknown, ask instead of inventing one.
+**Give the real why.** Explain why the change is done, and the technical choice after it. If the
+real reason is unknown, ask instead of inventing one.
 
 **Be concrete, not abstract.** Name the real cases, components and dialogs affected, before and
 after ("forms shown in a dialog (`FormViewDialog`, `x2many` dialogs) were protected, the sale
@@ -50,19 +75,18 @@ closing paragraph what an earlier one already says.
 
 Structure:
 
-- Title `[TAG] module: short description`, ideally under 50 characters. It must complete "If
-  applied, this commit will <title>" ("prevent crash on...", "avoid an extra request..."). Tags: `[FIX]` `[IMP]` `[REF]` `[ADD]` `[REM]` `[PERF]` `[MOV]` `[REV]`
-  `[I18N]` `[CLN]` (cleanup) `[LINT]`. Lowercase technical module name, no trailing period. If
-  several modules change, list them or write `various`, but prefer one commit per module. Never a
-  bare "bugfix" or "improvements" as description.
+- Title: summary ideally under 50 characters.
+- For a fix, a "Steps to reproduce:" list first (open Accounting, click X, ...), when there are
+  steps to follow.
 - Context paragraph: "Before this commit, ..." in the **past** tense (or "Currently, ..." in the
-  present). Never mix the two.
-- Fix paragraph: "This commit fixes/adds/removes ..." or "With this commit, ...". Not "Now ...".
+  present), saying what goes wrong and why. Never mix the two tenses.
+- Fix paragraph: "After this commit, ...", "This commit ...", or "With this commit, ...",
+  whichever reads best, saying how it behaves now. Not "Now ...".
 - Optional short paragraph for testing, bundling or an architectural note.
-- Footer: `task-id N` or `opw-N`, `Fixes #N` / `Closes #N` for a GitHub issue / PR, and `Related: odoo/enterprise#N` for the sibling-repo half. If
-  the number is unknown, ask for it after the message instead of inventing one.
-- No markdown headers, continuous paragraphs, body wrapped at 72 characters.
+- Footer: `task-N` or `opw-N`, `Fixes #N` for a GitHub issue. If the number is unknown, ask for it
+  after the message instead of inventing one.
+- No markdown headers and no list of code changes: paragraphs, except the steps to reproduce.
+  Body wrapped at 72 characters.
 - Backticks on every identifier: file path, variable, function, event name, class, directive,
   library (`FormViewDialog`, `x2many`, `applySearch()`, `monaco-vim`).
-- ASCII punctuation only (see `odoo-guidelines` > comments), no em dash.
-- No Co-Authored-By or other attribution line (global `CLAUDE.md`).
+- No Co-Authored-By or other attribution line (global `CLAUDE.md`), and never push.
