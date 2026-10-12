@@ -28,5 +28,6 @@
   "effortLevel": "high",
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
-  "theme": "auto"
+  "theme": "auto",
+  "model": "sonnet"
 }
