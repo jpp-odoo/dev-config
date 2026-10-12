@@ -10,7 +10,7 @@ docker run --rm --network goo_odoo --user odoo_user --workdir /src/odoo \
   -v "$src/$ws":/src -v /home/jpp/src/goo/addons:/goo-addons:ro \
   -v "$src/fileStorage":/home/odoo_user/.local/share/Odoo/filestore \
   noble python3 /src/odoo/odoo-bin --db_host goo-postgres --db_port 5432 -r odoo -w odoo \
-  -d "$db" --addons-path "$path,/goo-addons" --dev all --stop-after-init --http-port 8070 \
+  -d "$db" --addons-path "$path,/goo-addons" --dev all --stop-after-init --http-port ${HTTP_PORT:-8070} \
   --test-tags "$tags" "$@" 2>&1 | awk '
   /failed:|FAIL:|ERROR/ { n = 6 }
   n > 0 { print substr($0, 1, 400); n--; next }
