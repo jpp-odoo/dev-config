@@ -7,6 +7,18 @@
   when a direct call or a one-liner achieves the same thing. Fewer files, fewer
   moving parts, simplest first.
 
+## Questions
+
+- A question ("why...?", "can't we...?", "check if...", "see if it's possible", "is it a good
+  idea?") gets an answer (cause, options and their cost, your opinion), not code or changes. I
+  often ask before deciding. Wait for an explicit request before implementing.
+
+## Docs
+
+- READMEs and docs describe the current state only, as if written fresh. No changelog-style
+  "X is gone now", "no longer needed", or justifying what is not there: that belongs in the
+  commit message.
+
 ## Sessions
 
 - When a task is done, or I say I'm switching, closing or "wrap up": save what a future
@@ -26,6 +38,8 @@
   `docker inspect dev --format '{{.NetworkSettings.Networks.goo_odoo.IPAddress}}'`. DB = workspace dir name,
   login admin/admin. SQL: `docker exec goo-postgres psql -U odoo -d <db>`.
   Install extra modules with the odoo-test skill's throwaway container (`-i <module>`), not in `dev`.
+- **Any database you create for tests/screenshots: DROP it (`WITH (FORCE)`) and delete its filestore
+  (`~/src/odoo-src/fileStorage/<db>`) when the test is done.** Never leave test DBs behind.
 - Screenshots (I need them regularly): use `deno run -A ~/.claude/tools/odoo-shot.mjs <outdir> '<json [{name,path,js?,wait?}]>'`
   with env `ODOO_DB=<db>`. Header of the script lists the options (per-shot cids, file upload). Deep link: `/odoo/action-<xmlid>`.
   Host has no npm/playwright/pip libs: only chromium + deno (`npm:puppeteer-core`). Gotchas already solved in the script:
