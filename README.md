@@ -33,7 +33,7 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 | `discord` | Discord desktop settings |
 | `fish` | Fish shell config, custom functions (`herd`, `claudio`, `osh`), completions |
 | `git` | Git config and global gitignore (Odoo workflow aliases, split-diffs pager) |
-| `goo` | goo's live config.json (repos, workspaces, settings) — grows over time, commit to snapshot — and `goo.service`, which puts `agent-sandbox` first on Goo's `PATH` so the Claude it starts is sandboxed |
+| `goo` | goo's config directory, linked as a whole (Goo saves `config.json` by renaming a temp file over it, which would replace a file link; only `config.json` is tracked, see its `.gitignore`), and `goo.service`, which puts `agent-sandbox` first on Goo's `PATH` so the Claude it starts is sandboxed |
 | `hypr` | Hyprland WM overrides (input, monitors, one window rule) |
 | `mise` | Global mise tool versions (`~/.config/mise/config.toml`) — codex, gemini, gh, node |
 | `nvim` | NeoVim with LazyVim (LSP, DAP Python, Claude Code, Diffview, git permalink) |

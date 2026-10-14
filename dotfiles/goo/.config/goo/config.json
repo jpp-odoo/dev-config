@@ -1,5 +1,5 @@
 {
-  "rev": 72,
+  "rev": 388,
   "config": {
     "work_dir": "/home/odoo/work",
     "venv_activate": "",
@@ -11,7 +11,7 @@
     "db_port": "5432",
     "filestore": "/home/jpp/src/odoo-src/fileStorage/",
     "log_level": "",
-    "editor": "bash -c 'hyprctl eval \"hl.dispatch(hl.dsp.focus({ workspace = \\\"empty\\\" }))\" >/dev/null; foot --working-directory=\"$(dirname \"$1\")\" fish -c ide' _",
+    "editor": "bash -c 'cd \"$(dirname \"$1\")\" && fish -c herd' _",
     "main_repo_id": "odoo",
     "launch_mode": "docker",
     "docker_network": "goo_odoo",
@@ -30,10 +30,12 @@
     "auto_open_event_log": false,
     "update_check": true,
     "rust_bundler": false,
-    "workspace_categories_enabled": false,
+    "workspace_categories_enabled": true,
     "autologin_links": false,
     "cleanup_enabled": true,
-    "docker_headed_browser": false,
+    "docker_headed_browser": true,
+    "auto_workspace_on_review": false,
+    "auto_claude_review": false,
     "start": {
       "repos": [
         "community"
@@ -48,19 +50,19 @@
         "visible": true
       },
       {
-        "id": "branches",
-        "visible": true
-      },
-      {
         "id": "review-queue",
         "visible": true
       },
       {
-        "id": "todo",
+        "id": "branches",
         "visible": true
       },
       {
         "id": "databases",
+        "visible": true
+      },
+      {
+        "id": "todo",
         "visible": true
       },
       {
@@ -92,9 +94,30 @@
       },
       {
         "id": "base"
+      },
+      {
+        "id": "review"
       }
     ],
-    "reviews": [],
+    "reviews": [
+      {
+        "id": "odoo/odoo#292294",
+        "github": "odoo/odoo",
+        "number": 292294
+      },
+      {
+        "id": "odoo/enterprise#133470",
+        "github": "odoo/enterprise",
+        "number": 133470,
+        "important": false
+      },
+      {
+        "id": "odoo/odoo#291288",
+        "github": "odoo/odoo",
+        "number": 291288,
+        "important": false
+      }
+    ],
     "docker_images": [
       {
         "id": "jammy",
@@ -131,6 +154,7 @@
         "push_remote": "dev",
         "favorite": true,
         "external": false,
+        "opt_in": false,
         "autoreload": false
       },
       {
@@ -141,46 +165,51 @@
         "push_remote": "dev",
         "favorite": true,
         "external": false,
+        "opt_in": false,
+        "autoreload": false
+      },
+      {
+        "id": "upgrade",
+        "path": "/home/jpp/src/odoo-src/master/upgrade",
+        "github": "odoo/upgrade",
+        "pull_remote": "origin",
+        "push_remote": "origin",
+        "favorite": false,
+        "external": false,
+        "opt_in": true,
+        "autoreload": false
+      },
+      {
+        "id": "documentation",
+        "path": "/home/jpp/src/odoo-src/master/documentation",
+        "github": "odoo/documentation",
+        "pull_remote": "origin",
+        "push_remote": "origin",
+        "favorite": false,
+        "external": false,
+        "opt_in": true,
+        "autoreload": false
+      },
+      {
+        "id": "masterclass",
+        "path": "/home/jpp/src/masterclass-2026",
+        "github": "ged-odoo/masterclass-2026",
+        "pull_remote": "origin",
+        "push_remote": "origin",
+        "favorite": false,
+        "external": true,
+        "opt_in": false,
         "autoreload": false
       }
     ],
     "workspaces": [
-      {
-        "id": "master-url_search-jpp",
-        "name": "master-url_search-jpp",
-        "created_at": "2026-08-24T09:17:19.397682+00:00",
-        "last_activity": "2026-08-27T05:52:04.161Z",
-        "favorite": false,
-        "category": "",
-        "parent": "",
-        "notes": "",
-        "db": "master-url_search-jpp",
-        "on_create_args": "",
-        "demo_data": true,
-        "location": "worktree",
-        "worktree": {
-          "base": "",
-          "dir": "/home/jpp/src/odoo-src/master-url_search-jpp"
-        },
-        "port": null,
-        "checkouts": [
-          {
-            "repo": "odoo",
-            "branch": "master-url_search-jpp"
-          },
-          {
-            "repo": "enterprise",
-            "branch": "master-url_search-jpp"
-          }
-        ]
-      },
       {
         "id": "master-x2many_tags_field-jpp",
         "name": "master-x2many_tags_field-jpp",
         "created_at": "2026-08-25T09:01:30.463510+00:00",
         "last_activity": "2026-08-27T08:43:25.892Z",
         "favorite": false,
-        "category": "",
+        "category": "dev",
         "parent": "",
         "notes": "",
         "db": "master-x2many_tags_field-jpp",
@@ -207,9 +236,9 @@
         "id": "wt-master-clickbot_exception_records-jpp",
         "name": "master-clickbot_exception_records-jpp",
         "created_at": "2026-08-27T07:27:46.357Z",
-        "last_activity": "2026-08-27T07:28:30.284Z",
+        "last_activity": "2026-09-30T08:55:45.415Z",
         "favorite": false,
-        "category": "",
+        "category": "dev",
         "parent": "",
         "notes": "",
         "db": "master-clickbot_exception_records-jpp",
@@ -231,13 +260,201 @@
             "branch": "master-clickbot_exception_records-jpp"
           }
         ]
+      },
+      {
+        "id": "master_revert_revert_companies-jpp",
+        "name": "master_revert_revert_companies-jpp",
+        "created_at": "2026-09-24T12:06:51.110511+00:00",
+        "last_activity": "2026-09-24T12:06:51.110511+00:00",
+        "favorite": false,
+        "category": "dev",
+        "parent": "",
+        "notes": "",
+        "db": "master_revert_revert_companies-jpp",
+        "on_create_args": "",
+        "demo_data": true,
+        "location": "worktree",
+        "worktree": {
+          "base": "",
+          "dir": "/home/jpp/src/odoo-src/master_revert_revert_companies-jpp"
+        },
+        "port": null,
+        "checkouts": [
+          {
+            "repo": "odoo",
+            "branch": "master_revert_revert_companies-jpp"
+          },
+          {
+            "repo": "enterprise",
+            "branch": "master_revert_revert_companies-jpp"
+          }
+        ]
+      },
+      {
+        "id": "94c57655-684a-4639-9041-e3ad2b21af7b",
+        "name": "master",
+        "created_at": "2026-10-01T11:19:21.320Z",
+        "last_activity": "2026-10-08T12:31:23.635Z",
+        "favorite": false,
+        "category": "base",
+        "parent": "",
+        "notes": "",
+        "db": "runbot",
+        "on_create_args": "",
+        "demo_data": true,
+        "location": "main",
+        "worktree": null,
+        "port": null,
+        "checkouts": [
+          {
+            "repo": "odoo",
+            "branch": "master"
+          },
+          {
+            "repo": "enterprise",
+            "branch": "master"
+          }
+        ]
+      },
+      {
+        "id": "wt-20.0-invalidate_cache_archive_view_6634532-jpp",
+        "name": "20.0-invalidate_cache_archive_view_6634532-jpp",
+        "created_at": "2026-10-08T08:28:37.544Z",
+        "last_activity": "2026-10-08T08:29:06.858Z",
+        "favorite": false,
+        "category": "dev",
+        "parent": "",
+        "notes": "",
+        "db": "",
+        "on_create_args": "",
+        "demo_data": true,
+        "location": "worktree",
+        "worktree": {
+          "base": "tpl-master",
+          "dir": "/home/jpp/src/odoo-src/20.0-invalidate_cache_archive_view_6634532-jpp"
+        },
+        "port": 8075,
+        "checkouts": [
+          {
+            "repo": "odoo",
+            "branch": "20.0-invalidate_cache_archive_view_6634532-jpp"
+          },
+          {
+            "repo": "enterprise",
+            "branch": "20.0-invalidate_cache_archive_view_6634532-jpp"
+          }
+        ]
+      },
+      {
+        "id": "wt-master-uniformise_upload_4939265-jpp",
+        "name": "master-uniformise_upload_4939265-jpp",
+        "created_at": "2026-10-09T07:11:30.744Z",
+        "last_activity": "2026-10-09T13:14:21.526Z",
+        "favorite": false,
+        "category": "dev",
+        "parent": "",
+        "notes": "",
+        "db": "master-uniformise_upload_4939265-jpp",
+        "on_create_args": "",
+        "demo_data": true,
+        "location": "worktree",
+        "worktree": {
+          "base": "tpl-master",
+          "dir": "/home/jpp/src/odoo-src/master-uniformise_upload_4939265-jpp"
+        },
+        "port": 8071,
+        "checkouts": [
+          {
+            "repo": "odoo",
+            "branch": "master-uniformise_upload_4939265-jpp"
+          },
+          {
+            "repo": "enterprise",
+            "branch": "master-uniformise_upload_4939265-jpp"
+          },
+          {
+            "repo": "upgrade",
+            "branch": "master-uniformise_upload_4939265-jpp"
+          },
+          {
+            "repo": "documentation",
+            "branch": "master-uniformise_upload_4939265-jpp"
+          }
+        ]
+      },
+      {
+        "id": "wt-master-20.0-invalidate_cache_archive_view_6634532-jpp-575540-fw",
+        "name": "master-20.0-invalidate_cache_archive_view_6634532-jpp-575540-fw",
+        "created_at": "2026-10-14T06:28:04.080Z",
+        "last_activity": "2026-10-14T06:29:20.803Z",
+        "favorite": false,
+        "category": "dev",
+        "parent": "wt-20.0-invalidate_cache_archive_view_6634532-jpp",
+        "notes": "",
+        "db": "master-20.0-invalidate_cache_archive_view_6634532-jpp-575540-fw",
+        "on_create_args": "",
+        "demo_data": true,
+        "location": "worktree",
+        "worktree": {
+          "base": "",
+          "dir": "/home/jpp/src/odoo-src/master-20.0-invalidate_cache_archive_view_6634532-jpp-575540-fw"
+        },
+        "port": 8073,
+        "checkouts": [
+          {
+            "repo": "odoo",
+            "branch": "master-20.0-invalidate_cache_archive_view_6634532-jpp-575540-fw"
+          },
+          {
+            "repo": "enterprise",
+            "branch": "master-20.0-invalidate_cache_archive_view_6634532-jpp-575540-fw"
+          }
+        ]
+      },
+      {
+        "id": "wt-saas-19.3-fix_offline_parse_value-jpp",
+        "name": "saas-19.3-fix_offline_parse_value-jpp",
+        "created_at": "2026-10-14T07:51:46.167Z",
+        "last_activity": "2026-10-14T07:52:05.678Z",
+        "favorite": false,
+        "category": "dev",
+        "parent": "",
+        "notes": "",
+        "db": "saas-19.3-fix_offline_parse_value-jpp",
+        "on_create_args": "",
+        "demo_data": true,
+        "location": "worktree",
+        "worktree": {
+          "base": "tpl-master",
+          "dir": "/home/jpp/src/odoo-src/saas-19.3-fix_offline_parse_value-jpp"
+        },
+        "port": 8074,
+        "checkouts": [
+          {
+            "repo": "odoo",
+            "branch": "saas-19.3-fix_offline_parse_value-jpp"
+          }
+        ]
       }
     ],
-    "templates": []
+    "templates": [
+      {
+        "id": "tpl-master",
+        "name": "dev",
+        "db": "",
+        "on_create_args": "",
+        "demo_data": true,
+        "category": "dev",
+        "checkouts": []
+      }
+    ]
   },
   "state": {
-    "active_workspace": "",
+    "active_workspace": "94c57655-684a-4639-9041-e3ad2b21af7b",
     "claude_model": "",
-    "test_history": []
+    "test_history": [
+      ".test_access_inbox_records",
+      "--test-tags .test_access_inbox_records"
+    ]
   }
 }
