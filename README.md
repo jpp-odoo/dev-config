@@ -114,18 +114,28 @@ systemctl --user enable --now odoo-fetch.timer odoo-fetch.path
 
 ### Git remote setup
 
+`odoo`, `enterprise` and `design-themes` push to a personal `odoo-dev` fork; `upgrade` and
+`documentation` push to `origin`. `remote.pushDefault` (per repo, shared by its worktrees) tells the
+`git p` / `git pf` aliases where to push.
+
 ```bash
 cd /path/to/odoo
 git remote add dev git@github.com:odoo-dev/odoo.git
 git remote set-url --push origin you_should_not_push_on_this_repository
+git config remote.pushDefault dev
 
 cd /path/to/enterprise
 git remote add dev git@github.com:odoo-dev/enterprise.git
 git remote set-url --push origin you_should_not_push_on_this_repository
+git config remote.pushDefault dev
 
 cd /path/to/design-themes
 git remote add dev git@github.com:odoo-dev/design-themes.git
 git remote set-url --push origin you_should_not_push_on_this_repository
+git config remote.pushDefault dev
+
+cd /path/to/upgrade && git config remote.pushDefault origin
+cd /path/to/documentation && git config remote.pushDefault origin
 ```
 
 ### Docker infrastructure
