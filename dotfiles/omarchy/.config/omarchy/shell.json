@@ -7,7 +7,6 @@
   "bar": {
     "position": "top",
     "transparent": false,
-    "centerAnchor": "omarchy.clock",
     "layout": {
       "left": [
         {
@@ -19,20 +18,8 @@
       ],
       "center": [
         {
-          "id": "omarchy.indicators"
-        },
-        {
-          "id": "omarchy.media"
-        },
-        {
           "id": "omarchy.clock",
           "format": "ddd d MMM HH:mm"
-        },
-        {
-          "id": "omarchy.weather"
-        },
-        {
-          "id": "omarchy.system-update"
         }
       ],
       "right": [
@@ -57,6 +44,38 @@
         {
           "id": "omarchy.power",
           "showPercentage": true
+        }
+      ],
+      "centerBegin": [
+        {
+          "id": "omarchy.indicators"
+        },
+        {
+          "id": "omarchy.media"
+        }
+      ],
+      "centerEnd": [
+        {
+          "id": "omarchy.elsewhen",
+          "cities": [
+            {
+              "name": "Brussels",
+              "zone": "Europe/Brussels"
+            },
+            {
+              "name": "Lima",
+              "zone": "America/Lima",
+              "lat": -12.04318,
+              "lon": -77.02824,
+              "region": "Lima Province, PE"
+            }
+          ]
+        },
+        {
+          "id": "omarchy.weather"
+        },
+        {
+          "id": "omarchy.system-update"
         }
       ]
     }
