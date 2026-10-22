@@ -1,5 +1,5 @@
 {
-  "rev": 388,
+  "rev": 439,
   "config": {
     "work_dir": "/home/odoo/work",
     "venv_activate": "",
@@ -36,6 +36,8 @@
     "docker_headed_browser": true,
     "auto_workspace_on_review": false,
     "auto_claude_review": false,
+    "review_requests": true,
+    "odoo_tasks": true,
     "start": {
       "repos": [
         "community"
@@ -83,6 +85,16 @@
       }
     ],
     "links": [],
+    "workspace_links": [
+      {
+        "label": "/odoo",
+        "path": "/odoo?debug=assets"
+      },
+      {
+        "label": "/web/tests",
+        "path": "/web/tests?debug=assets&timeout=500000&manual=true"
+      }
+    ],
     "test_presets": [
       {
         "tags": "/web:WebSuite[@web]"
@@ -100,6 +112,16 @@
       }
     ],
     "reviews": [
+      {
+        "id": "odoo/odoo#296705",
+        "github": "odoo/odoo",
+        "number": 296705
+      },
+      {
+        "id": "odoo/odoo#294469",
+        "github": "odoo/odoo",
+        "number": 294469
+      },
       {
         "id": "odoo/odoo#292294",
         "github": "odoo/odoo",
@@ -294,12 +316,12 @@
         "id": "94c57655-684a-4639-9041-e3ad2b21af7b",
         "name": "master",
         "created_at": "2026-10-01T11:19:21.320Z",
-        "last_activity": "2026-10-08T12:31:23.635Z",
+        "last_activity": "2026-10-22T07:00:00.109Z",
         "favorite": false,
         "category": "base",
         "parent": "",
         "notes": "",
-        "db": "runbot",
+        "db": "master",
         "on_create_args": "",
         "demo_data": true,
         "location": "main",
@@ -313,35 +335,6 @@
           {
             "repo": "enterprise",
             "branch": "master"
-          }
-        ]
-      },
-      {
-        "id": "wt-20.0-invalidate_cache_archive_view_6634532-jpp",
-        "name": "20.0-invalidate_cache_archive_view_6634532-jpp",
-        "created_at": "2026-10-08T08:28:37.544Z",
-        "last_activity": "2026-10-08T08:29:06.858Z",
-        "favorite": false,
-        "category": "dev",
-        "parent": "",
-        "notes": "",
-        "db": "",
-        "on_create_args": "",
-        "demo_data": true,
-        "location": "worktree",
-        "worktree": {
-          "base": "tpl-master",
-          "dir": "/home/jpp/src/odoo-src/20.0-invalidate_cache_archive_view_6634532-jpp"
-        },
-        "port": 8075,
-        "checkouts": [
-          {
-            "repo": "odoo",
-            "branch": "20.0-invalidate_cache_archive_view_6634532-jpp"
-          },
-          {
-            "repo": "enterprise",
-            "branch": "20.0-invalidate_cache_archive_view_6634532-jpp"
           }
         ]
       },
@@ -383,56 +376,131 @@
         ]
       },
       {
-        "id": "wt-master-20.0-invalidate_cache_archive_view_6634532-jpp-575540-fw",
-        "name": "master-20.0-invalidate_cache_archive_view_6634532-jpp-575540-fw",
-        "created_at": "2026-10-14T06:28:04.080Z",
-        "last_activity": "2026-10-14T06:29:20.803Z",
-        "favorite": false,
-        "category": "dev",
-        "parent": "wt-20.0-invalidate_cache_archive_view_6634532-jpp",
-        "notes": "",
-        "db": "master-20.0-invalidate_cache_archive_view_6634532-jpp-575540-fw",
-        "on_create_args": "",
-        "demo_data": true,
-        "location": "worktree",
-        "worktree": {
-          "base": "",
-          "dir": "/home/jpp/src/odoo-src/master-20.0-invalidate_cache_archive_view_6634532-jpp-575540-fw"
-        },
-        "port": 8073,
-        "checkouts": [
-          {
-            "repo": "odoo",
-            "branch": "master-20.0-invalidate_cache_archive_view_6634532-jpp-575540-fw"
-          },
-          {
-            "repo": "enterprise",
-            "branch": "master-20.0-invalidate_cache_archive_view_6634532-jpp-575540-fw"
-          }
-        ]
-      },
-      {
-        "id": "wt-saas-19.3-fix_offline_parse_value-jpp",
-        "name": "saas-19.3-fix_offline_parse_value-jpp",
-        "created_at": "2026-10-14T07:51:46.167Z",
-        "last_activity": "2026-10-14T07:52:05.678Z",
+        "id": "wt-saas-19.3-bug_save_offline-jpp",
+        "name": "saas-19.3-bug_save_offline-jpp",
+        "created_at": "2026-10-15T11:49:23.782Z",
+        "last_activity": "2026-10-21T09:47:32.879Z",
         "favorite": false,
         "category": "dev",
         "parent": "",
         "notes": "",
-        "db": "saas-19.3-fix_offline_parse_value-jpp",
+        "db": "saas-19.3-bug_save_offline-jpp",
         "on_create_args": "",
         "demo_data": true,
         "location": "worktree",
         "worktree": {
           "base": "tpl-master",
-          "dir": "/home/jpp/src/odoo-src/saas-19.3-fix_offline_parse_value-jpp"
+          "dir": "/home/jpp/src/odoo-src/saas-19.3-bug_save_offline-jpp"
         },
         "port": 8074,
         "checkouts": [
           {
             "repo": "odoo",
-            "branch": "saas-19.3-fix_offline_parse_value-jpp"
+            "branch": "saas-19.3-bug_save_offline-jpp"
+          }
+        ]
+      },
+      {
+        "id": "wt-master-lint_t_error-jpp",
+        "name": "master-lint_t_error-jpp",
+        "created_at": "2026-10-16T12:28:44.574Z",
+        "last_activity": "2026-10-16T12:29:00.371Z",
+        "favorite": false,
+        "category": "dev",
+        "parent": "",
+        "notes": "",
+        "db": "master-lint_t_error-jpp",
+        "on_create_args": "",
+        "demo_data": true,
+        "location": "worktree",
+        "worktree": {
+          "base": "tpl-master",
+          "dir": "/home/jpp/src/odoo-src/master-lint_t_error-jpp"
+        },
+        "port": 8073,
+        "checkouts": [
+          {
+            "repo": "odoo",
+            "branch": "master-lint_t_error-jpp"
+          }
+        ]
+      },
+      {
+        "id": "wt-saas-19.1-fix_website_editor_offline-jpp",
+        "name": "saas-19.1-fix_website_editor_offline-jpp",
+        "created_at": "2026-10-20T14:06:19.847Z",
+        "last_activity": "2026-10-21T12:54:13.680Z",
+        "favorite": false,
+        "category": "dev",
+        "parent": "",
+        "notes": "",
+        "db": "saas-19.1-fix_website_editor_offline-jpp",
+        "on_create_args": "",
+        "demo_data": true,
+        "location": "worktree",
+        "worktree": {
+          "base": "tpl-master",
+          "dir": "/home/jpp/src/odoo-src/saas-19.1-fix_website_editor_offline-jpp"
+        },
+        "port": 8075,
+        "checkouts": [
+          {
+            "repo": "odoo",
+            "branch": "saas-19.1-fix_website_editor_offline-jpp"
+          }
+        ]
+      },
+      {
+        "id": "wt-18.0",
+        "name": "18.0",
+        "created_at": "2026-10-21T13:43:23.674Z",
+        "last_activity": "2026-10-21T13:43:50.720Z",
+        "favorite": false,
+        "category": "base",
+        "parent": "",
+        "notes": "",
+        "db": "18.0",
+        "on_create_args": "",
+        "demo_data": true,
+        "location": "worktree",
+        "worktree": {
+          "base": "",
+          "dir": "/home/jpp/src/odoo-src/18.0"
+        },
+        "port": 8076,
+        "checkouts": [
+          {
+            "repo": "odoo",
+            "branch": "18.0"
+          },
+          {
+            "repo": "enterprise",
+            "branch": "18.0"
+          }
+        ]
+      },
+      {
+        "id": "wt-19.0-web-salary_calculator_employee_form-aryep",
+        "name": "19.0-web-salary_calculator_employee_form-aryep",
+        "created_at": "2026-10-21T13:47:34.170Z",
+        "last_activity": "2026-10-21T13:48:40.698Z",
+        "favorite": false,
+        "category": "",
+        "parent": "",
+        "notes": "",
+        "db": "19.0-web-salary_calculator_employee_form-aryep",
+        "on_create_args": "",
+        "demo_data": false,
+        "location": "worktree",
+        "worktree": {
+          "base": "",
+          "dir": "/home/jpp/src/odoo-src/19.0-web-salary_calculator_employee_form-aryep"
+        },
+        "port": 8077,
+        "checkouts": [
+          {
+            "repo": "odoo",
+            "branch": "19.0-web-salary_calculator_employee_form-aryep"
           }
         ]
       }
