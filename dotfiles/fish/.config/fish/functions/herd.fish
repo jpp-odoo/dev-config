@@ -1,3 +1,12 @@
+# Typing into a pane before its shell shows a prompt loses the keystrokes
+function __herd_run
+    for i in (seq 100)
+        string match -q '*❯*' (herdr pane read $argv[1] 2>/dev/null | string collect); and break
+        sleep 0.1
+    end
+    herdr pane run $argv >/dev/null
+end
+
 function herd --description 'ide, but a herdr workspace (editor, git, claude tabs) in one shared herdr window'
     set -l dir (pwd)
     set -l name (basename $dir)
@@ -35,7 +44,7 @@ function herd --description 'ide, but a herdr workspace (editor, git, claude tab
     set -l ids (herdr workspace create --cwd $dir --label $name --focus | jq -r '.result.workspace.workspace_id, .result.tab.tab_id, .result.root_pane.pane_id')
     set ws $ids[1]
     herdr tab rename $ids[2] editor >/dev/null
-    herdr pane run $ids[3] nvim >/dev/null
+    __herd_run $ids[3] nvim
 
     # git tab: odoo on top, enterprise below
     set -l git (herdr tab create --workspace $ws --cwd $dir/odoo --label git --no-focus | jq -r .result.root_pane.pane_id)
@@ -43,5 +52,5 @@ function herd --description 'ide, but a herdr workspace (editor, git, claude tab
 
     # claude tab: typed into fish, so it resolves the sandboxed `claude` function
     set -l claude (herdr tab create --workspace $ws --cwd $dir --label claude --no-focus | jq -r .result.root_pane.pane_id)
-    herdr pane run $claude claude >/dev/null
+    __herd_run $claude claude
 end
