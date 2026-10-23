@@ -24,6 +24,11 @@ Brief each agent with the absolute workspace path, the goal, the files involved 
 expected answer. Run independent agents in parallel. Their results are leads: verify what
 matters before relying on it.
 
+## Review of my changes
+
+When a task is done, offer the `tuicr-review` skill so I can review the diff line by line. Do not
+open it unasked.
+
 ## Customizations: last resort
 
 A customization (custom template, JS patch, server-side trick, new framework option) is expensive to

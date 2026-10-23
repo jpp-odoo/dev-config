@@ -20,7 +20,7 @@
 [core]
 	excludesfile = ~/.config/git/gitglobalignore
 	editor = nvim
-	pager = git-split-diffs --color | less -+LFX
+	pager = delta
 
 [fetch]
     prune = true
@@ -35,7 +35,23 @@
 	autoSetupRemote = true
 	default = current
 
-[split-diffs]
-	theme-name = github-dark-dim
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	line-numbers = true
+	syntax-theme = Catppuccin Mocha
+	plus-style = syntax "#394545"
+	plus-emph-style = syntax "#4d6356"
+	minus-style = syntax "#493446"
+	minus-emph-style = syntax "#694459"
+	line-numbers-plus-style = "#a6e3a1"
+	line-numbers-minus-style = "#f38ba8"
+	line-numbers-zero-style = "#585b70"
+	file-style = bold "#89b4fa"
+	file-decoration-style = "#89b4fa" ul
+	hunk-header-style = file line-number syntax
+	hunk-header-decoration-style = "#585b70" box
 ; [url "ssh://git@ssh.github.com:443/"]
 ; 	insteadOf = git@github.com:
