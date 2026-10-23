@@ -1,5 +1,5 @@
 {
-  "rev": 439,
+  "rev": 457,
   "config": {
     "work_dir": "/home/odoo/work",
     "venv_activate": "",
@@ -11,7 +11,7 @@
     "db_port": "5432",
     "filestore": "/home/jpp/src/odoo-src/fileStorage/",
     "log_level": "",
-    "editor": "bash -c 'cd \"$(dirname \"$1\")\" && fish -c herd' _",
+    "editor": "bash -c 'cd \"$(dirname \"$1\")\" && exec fish -c \"herd \\$argv\" \"$@\"' _",
     "main_repo_id": "odoo",
     "launch_mode": "docker",
     "docker_network": "goo_odoo",
@@ -113,19 +113,19 @@
     ],
     "reviews": [
       {
+        "id": "odoo/odoo#295859",
+        "github": "odoo/odoo",
+        "number": 295859
+      },
+      {
+        "id": "odoo/odoo#296329",
+        "github": "odoo/odoo",
+        "number": 296329
+      },
+      {
         "id": "odoo/odoo#296705",
         "github": "odoo/odoo",
         "number": 296705
-      },
-      {
-        "id": "odoo/odoo#294469",
-        "github": "odoo/odoo",
-        "number": 294469
-      },
-      {
-        "id": "odoo/odoo#292294",
-        "github": "odoo/odoo",
-        "number": 292294
       },
       {
         "id": "odoo/enterprise#133470",
@@ -316,7 +316,7 @@
         "id": "94c57655-684a-4639-9041-e3ad2b21af7b",
         "name": "master",
         "created_at": "2026-10-01T11:19:21.320Z",
-        "last_activity": "2026-10-22T07:00:00.109Z",
+        "last_activity": "2026-10-22T12:17:00.979Z",
         "favorite": false,
         "category": "base",
         "parent": "",
@@ -342,7 +342,7 @@
         "id": "wt-master-uniformise_upload_4939265-jpp",
         "name": "master-uniformise_upload_4939265-jpp",
         "created_at": "2026-10-09T07:11:30.744Z",
-        "last_activity": "2026-10-09T13:14:21.526Z",
+        "last_activity": "2026-10-22T12:10:50.601Z",
         "favorite": false,
         "category": "dev",
         "parent": "",
@@ -379,7 +379,7 @@
         "id": "wt-saas-19.3-bug_save_offline-jpp",
         "name": "saas-19.3-bug_save_offline-jpp",
         "created_at": "2026-10-15T11:49:23.782Z",
-        "last_activity": "2026-10-21T09:47:32.879Z",
+        "last_activity": "2026-10-22T09:11:18.222Z",
         "favorite": false,
         "category": "dev",
         "parent": "",
@@ -401,35 +401,10 @@
         ]
       },
       {
-        "id": "wt-master-lint_t_error-jpp",
-        "name": "master-lint_t_error-jpp",
-        "created_at": "2026-10-16T12:28:44.574Z",
-        "last_activity": "2026-10-16T12:29:00.371Z",
-        "favorite": false,
-        "category": "dev",
-        "parent": "",
-        "notes": "",
-        "db": "master-lint_t_error-jpp",
-        "on_create_args": "",
-        "demo_data": true,
-        "location": "worktree",
-        "worktree": {
-          "base": "tpl-master",
-          "dir": "/home/jpp/src/odoo-src/master-lint_t_error-jpp"
-        },
-        "port": 8073,
-        "checkouts": [
-          {
-            "repo": "odoo",
-            "branch": "master-lint_t_error-jpp"
-          }
-        ]
-      },
-      {
         "id": "wt-saas-19.1-fix_website_editor_offline-jpp",
         "name": "saas-19.1-fix_website_editor_offline-jpp",
         "created_at": "2026-10-20T14:06:19.847Z",
-        "last_activity": "2026-10-21T12:54:13.680Z",
+        "last_activity": "2026-10-22T13:08:38.735Z",
         "favorite": false,
         "category": "dev",
         "parent": "",
@@ -501,6 +476,56 @@
           {
             "repo": "odoo",
             "branch": "19.0-web-salary_calculator_employee_form-aryep"
+          }
+        ]
+      },
+      {
+        "id": "wt-19.0-opw_6653774-web-required_field_persist-abz",
+        "name": "19.0-opw_6653774-web-required_field_persist-abz",
+        "created_at": "2026-10-22T08:27:08.514Z",
+        "last_activity": "2026-10-22T08:27:17.194Z",
+        "favorite": false,
+        "category": "review",
+        "parent": "",
+        "notes": "",
+        "db": "19.0-opw_6653774-web-required_field_persist-abz",
+        "on_create_args": "",
+        "demo_data": true,
+        "location": "worktree",
+        "worktree": {
+          "base": "",
+          "dir": "/home/jpp/src/odoo-src/19.0-opw_6653774-web-required_field_persist-abz"
+        },
+        "port": 8078,
+        "checkouts": [
+          {
+            "repo": "odoo",
+            "branch": "19.0-opw_6653774-web-required_field_persist-abz"
+          }
+        ]
+      },
+      {
+        "id": "wt-20.0-fix-offline-new-record-sync",
+        "name": "20.0-fix-offline-new-record-sync",
+        "created_at": "2026-10-22T08:27:21.257Z",
+        "last_activity": "2026-10-22T08:27:27.953Z",
+        "favorite": false,
+        "category": "review",
+        "parent": "",
+        "notes": "",
+        "db": "20.0-fix-offline-new-record-sync",
+        "on_create_args": "",
+        "demo_data": true,
+        "location": "worktree",
+        "worktree": {
+          "base": "",
+          "dir": "/home/jpp/src/odoo-src/20.0-fix-offline-new-record-sync"
+        },
+        "port": 8079,
+        "checkouts": [
+          {
+            "repo": "odoo",
+            "branch": "20.0-fix-offline-new-record-sync"
           }
         ]
       }
