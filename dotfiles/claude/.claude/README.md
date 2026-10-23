@@ -14,7 +14,7 @@ goo's `dev` / `goo-postgres` containers): adapt them to yours.
 |------|------|
 | [`CLAUDE.md`](CLAUDE.md) | Global rules, loaded in every session |
 | [`agents/`](agents) | Subagents: `odoo-explorer`, `odoo-tester`, `odoo-reviewer` |
-| [`skills/`](skills) | Skills: `odoo-test`, `fresh-review`, `tuicr-review` |
+| [`skills/`](skills) | Skills: `odoo-test`, `fresh-review`, `tuicr` |
 | [`tools/`](tools) | Scripts used by the skills and rules: `odoo-test.sh`, `odoo-shot.mjs` |
 | [`settings.json`](settings.json) | Model, effort, status line, hooks, plugins |
 | [`statusline-command.sh`](statusline-command.sh) | Status line script |
@@ -64,7 +64,7 @@ small and cheap. Each one uses the model that fits its job.
 |-------|--------------|
 | [`odoo-test`](skills/odoo-test/SKILL.md) | Runs Odoo tests in a throwaway Docker container that reuses goo's image, network and Postgres, through `tools/odoo-test.sh`. Explains the test tags for a Hoot file/suite (desktop + mobile) or a Python module/class/method, and how to read the results. Claude never runs `odoo-bin` on the host and never asks how to run tests. |
 | [`fresh-review`](skills/fresh-review/SKILL.md) | "Make a fresh review": reviews the current diff (or unpushed commits, or a given commit/PR) in a **new** subagent with no conversation context and no memory, so the review isn't biased by what the session already believes. Claude then relays every finding with its own short take. |
-| [`tuicr-review`](skills/tuicr-review/SKILL.md) | "Review my changes": asks which repos, opens tuicr on each in a new herdr tab, and after the user's review reads the comments from tuicr's saved sessions and fixes them. |
+| [`tuicr`](skills/tuicr/SKILL.md) | tuicr's own skill (from its repo), with the herdr wrapper changed to open a tab: asks which repos, opens tuicr on each, then reads the user's comments (or adds its own) through `tuicr review`. |
 
 I also use the Odoo house-rule skills shipped in the `odoo` repo (`odoo/skills/`: `odoo-guidelines`,
 `odoo-web-guidelines`, `odoo-security`, `odoo-review`), symlinked into `~/.claude/skills/`. They

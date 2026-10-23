@@ -26,7 +26,7 @@ matters before relying on it.
 
 ## Review of my changes
 
-When a task is done, offer the `tuicr-review` skill so I can review the diff line by line. Do not
+When a task is done, offer the `tuicr` skill so I can review the diff line by line. Do not
 open it unasked.
 
 ## Customizations: last resort
