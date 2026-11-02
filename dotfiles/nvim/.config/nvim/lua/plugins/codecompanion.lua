@@ -1,6 +1,4 @@
 -- CodeCompanion: AI chat and refactoring via Gemini
--- Get a key at: aistudio.google.com/apikey
---
 -- Keys (<leader>G prefix to avoid conflicts with claudecode.nvim):
 --   <leader>Ga  → action menu (explain, refactor, fix, generate tests...)
 --   <leader>Gc  → toggle chat sidebar
