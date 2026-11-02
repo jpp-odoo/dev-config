@@ -1,5 +1,4 @@
 -- CodeCompanion: AI chat and refactoring via Gemini
--- Requires: set -gx GEMINI_API_KEY "your-key" in ~/.config/fish/config.fish
 -- Get a key at: aistudio.google.com/apikey
 --
 -- Keys (<leader>G prefix to avoid conflicts with claudecode.nvim):

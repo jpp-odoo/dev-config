@@ -101,9 +101,6 @@ gitleaks is missing.
 ### Post-install setup
 
 ```bash
-# Store Gemini API key in GNOME Keyring (used by NeoVim CodeCompanion)
-secret-tool store --label="Gemini API Key" unique "gemini-api-key"
-
 # Install Yazi Catppuccin flavor
 ya pkg add yazi-rs/flavors:catppuccin-mocha
 
