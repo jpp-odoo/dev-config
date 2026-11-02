@@ -35,7 +35,7 @@ A complete dotfiles setup managed with [GNU Stow](https://www.gnu.org/software/s
 | `git` | Git config and global gitignore (Odoo workflow aliases, delta pager in Catppuccin Mocha) |
 | `goo` | goo's config directory, linked as a whole (Goo saves `config.json` by renaming a temp file over it, which would replace a file link; only `config.json` is tracked, see its `.gitignore`), and `goo.service`, which puts `agent-sandbox` first on Goo's `PATH` so the Claude it starts is sandboxed |
 | `hypr` | Hyprland WM overrides (input, monitors, one window rule) |
-| `mise` | Global mise tool versions (`~/.config/mise/config.toml`) — codex, gemini, gh, node |
+| `mise` | Global mise tool versions (`~/.config/mise/config.toml`) — codex, gh, node |
 | `nvim` | NeoVim with LazyVim (LSP, DAP Python, Claude Code, Diffview, git permalink) |
 | `odoo-src` | `~/src/odoo-src/CLAUDE.md`: rules for every Odoo workspace (delegate exploration, tests and review to the `odoo-*` agents; write code in the main session) |
 | `omarchy` | Omarchy shell overrides (status bar layout via `shell.json`) |
