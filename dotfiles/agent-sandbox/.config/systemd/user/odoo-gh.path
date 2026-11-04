@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the read-only gh commands the Claude sandbox asks for
+StartLimitIntervalSec=0
+
+[Path]
+PathExistsGlob=%h/.local/state/odoo-gh/req/*
+MakeDirectory=true
+
+[Install]
+WantedBy=default.target

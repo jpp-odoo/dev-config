@@ -1,0 +1,21 @@
+#!/bin/bash
+# `gh` inside the Claude sandbox, which has no GitHub credentials: asks the host to run
+# a read-only gh command (odoo-gh.path -> odoo-gh) and relays the answer.
+
+state="$HOME/.local/state/odoo-gh"
+id="$$-$(date +%s%N)"
+
+printf '%s\0' "$PWD" "$@" >"$state/req/.$id"
+mv "$state/req/.$id" "$state/req/$id"
+
+for _ in $(seq 1200); do
+    [ -e "$state/res/$id.status" ] && break
+    sleep 0.1
+done
+[ -e "$state/res/$id.status" ] || { rm -f "$state/req/$id"; echo "gh: no answer from the host after 2 min" >&2; exit 1; }
+
+cat "$state/res/$id.out"
+cat "$state/res/$id.err" >&2
+status=$(cat "$state/res/$id.status")
+rm -f "$state/res/$id."*
+exit "$status"

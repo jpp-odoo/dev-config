@@ -1,0 +1,7 @@
+[Unit]
+Description=Run the read-only gh commands the Claude sandbox asks for
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/libexec/agent-sandbox/odoo-gh

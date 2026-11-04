@@ -6,7 +6,12 @@ servers, databases and worktrees in Docker containers; use them freely to run Od
 
 `git fetch` fails in the sandbox (no SSH). Run `odoo-fetch` instead: the host fetches origin for
 odoo, enterprise, documentation and upgrade, which updates `origin/*` in every workspace, then
-rebase as usual. It takes about a minute. Fetching from `dev` is not possible.
+rebase as usual. It takes about a minute. To fetch one branch only (a few seconds), run
+`odoo-fetch <odoo|enterprise|documentation|upgrade> <branch> [<remote>]`. Fetching from `dev` is not possible.
+
+`gh` in the sandbox is a shim: the host runs the command with its credentials, read-only
+(`pr|issue view|list|status`, `pr diff|checks`, `run list|view`, `repo view`, `release list|view`,
+`search`, `api` GET, from a directory under `~/src`). Anything else is refused. There is no `git push`.
 
 ## Delegate the reading, keep the writing
 
@@ -26,7 +31,7 @@ matters before relying on it.
 
 ## Review of my changes
 
-When a task is done, offer the `tuicr` skill so I can review the diff line by line. Do not
+When a task is done, offer the `hunk-review` skill so I can review the diff line by line. Do not
 open it unasked.
 
 ## Customizations: last resort

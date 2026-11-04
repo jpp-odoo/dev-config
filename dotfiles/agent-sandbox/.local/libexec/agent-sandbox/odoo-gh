@@ -1,0 +1,71 @@
+#!/bin/bash
+# Host side of the sandbox's `gh` (odoo-gh.path): runs the requests in ~/.local/state/odoo-gh/req
+# with the host's gh credentials, but only read-only commands. The sandbox writes the requests,
+# so everything in them is untrusted.
+
+state="$HOME/.local/state/odoo-gh"
+mkdir -p "$state/req" "$state/res"
+set -o noclobber
+
+allowed() {
+    case "$1 $2" in
+        "pr view" | "pr list" | "pr diff" | "pr checks" | "pr status" | \
+        "issue view" | "issue list" | "issue status" | \
+        "run list" | "run view" | "repo view" | "release list" | "release view") ;;
+        "search prs" | "search issues" | "search code" | "search commits" | "search repos") ;;
+        api\ *) api_allowed "${@:2}"; return ;;
+        *) echo "gh: only read-only commands are allowed here: pr|issue view|list|status, pr diff|checks, run list|view, repo view, release list|view, search, and api GET" >&2; return 1 ;;
+    esac
+    local a
+    for a in "$@"; do
+        case "$a" in
+            -w | --web) echo "gh: $a is not allowed here" >&2; return 1 ;;
+        esac
+    done
+}
+
+# GET only: no body, no method override, no graphql (it can mutate).
+api_allowed() {
+    local endpoint=""
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            -q | --jq | --cache | -t | --template) shift ;;
+            -H | --header)
+                case "$2" in Accept:*) ;; *) echo "gh api: only an Accept header is allowed" >&2; return 1 ;; esac
+                shift ;;
+            --paginate | --slurp | -i | --include | --verbose) ;;
+            -*) echo "gh api: option $1 is not allowed (GET only)" >&2; return 1 ;;
+            *) [ -z "$endpoint" ] || { echo "gh api: one endpoint only" >&2; return 1; }; endpoint=$1 ;;
+        esac
+        shift
+    done
+    case "${endpoint,,}" in
+        "" | graphql* | /graphql*) echo "gh api: an REST endpoint is required (graphql is not allowed)" >&2; return 1 ;;
+    esac
+}
+
+for req in "$state"/req/*; do
+    [ -f "$req" ] && [ ! -L "$req" ] || continue
+    id=${req##*/}
+    mapfile -d '' fields <"$req"
+    rm -f "$req"
+    [[ $id =~ ^[A-Za-z0-9._-]+$ ]] || continue
+
+    res="$state/res/$id"
+    rm -f "$res.out" "$res.err" "$res.status" "$res.status.tmp"
+    cwd=$(realpath -- "${fields[0]}" 2>/dev/null)
+    args=("${fields[@]:1}")
+    {
+        if [[ $cwd != "$HOME"/src/* ]]; then
+            echo "gh: run it from a directory under ~/src" >&2; status=1
+        elif allowed "${args[@]}"; then
+            (cd "$cwd" && GH_PROMPT_DISABLED=1 GH_NO_UPDATE_NOTIFIER=1 GH_PAGER=cat NO_COLOR=1 \
+                timeout 60 gh "${args[@]}" </dev/null)
+            status=$?
+        else
+            status=1
+        fi
+    } >"$res.out" 2>"$res.err"
+    echo "$status" >"$res.status.tmp"
+    mv "$res.status.tmp" "$res.status"
+done

@@ -1,13 +1,15 @@
 #!/bin/bash
 # Fetch origin in the main Odoo checkouts (~/src/odoo-src/master/*), whose refs every
-# worktree shares. On the host it fetches (odoo-fetch.timer, twice a day). Inside the
+# worktree shares: all of them, or only `odoo-fetch <repo> <branch> [<remote>]`.
+# On the host it fetches (odoo-fetch.timer, twice a day). Inside the
 # Claude sandbox, which has no SSH, it asks the host to fetch (odoo-fetch.path) and
 # waits for the result.
 
 state="$HOME/.local/state/odoo-fetch"
 
 if [ "$(cat /proc/sys/kernel/hostname)" = claude-sandbox ]; then
-    rm -f "$state/status"
+    rm -f "$state/status" "$state/args"
+    [ $# -eq 0 ] || printf '%s\0' "$@" >"$state/args"
     touch "$state/request"
     for _ in $(seq 600); do
         [ -e "$state/status" ] && break
@@ -19,12 +21,32 @@ if [ "$(cat /proc/sys/kernel/hostname)" = claude-sandbox ]; then
 fi
 
 mkdir -p "$state"
+if [ $# -eq 0 ] && [ -e "$state/args" ]; then
+    mapfile -d '' args <"$state/args"
+    set -- "${args[@]}"
+fi
+rm -f "$state/args"
 status=0
-for repo in "$HOME"/src/odoo-src/master/{odoo,enterprise,documentation,upgrade}; do
-    [ -d "$repo/.git" ] || continue
-    echo "== $repo"
-    git -C "$repo" fetch origin || status=1
-done >"$state/log" 2>&1
+{
+    if [ $# -eq 0 ]; then
+        for repo in "$HOME"/src/odoo-src/master/{odoo,enterprise,documentation,upgrade}; do
+            [ -d "$repo/.git" ] || continue
+            echo "== $repo"
+            git -C "$repo" fetch origin || status=1
+        done
+    else
+        repo=$1 branch=$2 remote=${3:-origin}
+        if [[ " odoo enterprise documentation upgrade " != *" $repo "* ]] \
+            || [[ ! $branch =~ ^[A-Za-z0-9._/-]+$ || $branch == -* ]] \
+            || [[ ! $remote =~ ^[A-Za-z0-9._-]+$ || $remote == -* ]]; then
+            echo "usage: odoo-fetch [<odoo|enterprise|documentation|upgrade> <branch> [<remote>]]"
+            status=1
+        else
+            echo "== $repo $remote $branch"
+            git -C "$HOME/src/odoo-src/master/$repo" fetch "$remote" "$branch" || status=1
+        fi
+    fi
+} >"$state/log" 2>&1
 echo "$status" >"$state/status"
 cat "$state/log"
 exit "$status"

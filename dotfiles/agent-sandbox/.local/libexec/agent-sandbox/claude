@@ -105,6 +105,14 @@ odoo_fetch_state="$HOME/.local/state/odoo-fetch"
 mkdir -p "$odoo_fetch_state"
 bwrap_args+=(--bind "$odoo_fetch_state" "$odoo_fetch_state"
     --ro-bind "$HOME/.local/libexec/agent-sandbox/odoo-fetch" "$HOME/.local/bin/odoo-fetch")
+# hunk (diff viewer): the CLI talks to the user's Hunk windows through a localhost daemon.
+hunk_bin="$(readlink -f "$HOME/.local/share/mise/installs/hunk/latest/hunkdiff-linux-x64/hunk" 2>/dev/null)"
+[ -x "$hunk_bin" ] && bwrap_args+=(--ro-bind "$hunk_bin" "$HOME/.local/bin/hunk")
+# No GitHub credentials in here either: `gh` is a shim that asks the host for read-only commands (odoo-gh.path).
+odoo_gh_state="$HOME/.local/state/odoo-gh"
+mkdir -p "$odoo_gh_state/req" "$odoo_gh_state/res"
+bwrap_args+=(--bind "$odoo_gh_state" "$odoo_gh_state"
+    --ro-bind "$HOME/.local/libexec/agent-sandbox/gh" "$HOME/.local/bin/gh")
 for d in "${allow_dirs[@]}"; do
     bwrap_args+=(--bind "$d" "$d")
     claude_args+=(--add-dir "$d")
